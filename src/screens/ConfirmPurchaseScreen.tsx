@@ -5,6 +5,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
+  ScrollView,
+  SafeAreaView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
@@ -27,7 +29,7 @@ const ConfirmPurchaseScreen: React.FC<ConfirmPurchaseScreenProps> = ({ route }) 
   const { marketQuestion, position, probability, stake, potentialProfit, fee } = route.params;
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <View style={styles.headerLeft}>
           <Image 
@@ -44,89 +46,101 @@ const ConfirmPurchaseScreen: React.FC<ConfirmPurchaseScreenProps> = ({ route }) 
         </TouchableOpacity>
       </View>
 
-      <View style={styles.content}>
-        <View style={styles.successIcon}>
-          <Icon name="checkmark" size={48} color="#FFFFFF" />
-        </View>
-        <Text style={styles.title}>Purchase Successful!</Text>
-        <Text style={styles.subtitle}>Your position has been confirmed</Text>
-
-        <View style={styles.card}>
-          <Text style={styles.sectionTitle}>Order Details</Text>
-          
-          <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Market</Text>
-            <Text style={styles.detailValue}>{marketQuestion}</Text>
+      <ScrollView 
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollViewContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.content}>
+          <View style={styles.successIcon}>
+            <Icon name="checkmark" size={48} color="#FFFFFF" />
           </View>
+          <Text style={styles.title}>Purchase Successful!</Text>
+          <Text style={styles.subtitle}>Your position has been confirmed</Text>
 
-          <View style={styles.divider} />
-
-          <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Position</Text>
-            <Text style={[styles.detailValue, styles.positionValue]}>Yes @ {probability}%</Text>
-          </View>
-
-          <View style={styles.divider} />
-
-          <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Stake Amount</Text>
-            <Text style={styles.detailValue}>${stake.toFixed(2)}</Text>
-          </View>
-
-          <View style={styles.divider} />
-
-          <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Transaction Fee</Text>
-            <Text style={styles.detailValue}>${fee.toFixed(2)}</Text>
-          </View>
-
-          <View style={styles.divider} />
-
-          <View style={[styles.detailRow]}>
-            <Text style={styles.detailLabel}>Potential Profit</Text>
-            <Text style={[styles.detailValue, styles.profitValue]}>+${potentialProfit.toFixed(2)}</Text>
-          </View>
-        </View>
-
-        <TouchableOpacity
-          style={styles.primaryButton}
-          onPress={() => navigation.navigate('Positions')}
-        >
-          <Text style={styles.primaryButtonText}>View My Positions</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.secondaryButton}
-          onPress={() => navigation.navigate('Main', { screen: 'Markets' })}
-        >
-          <Text style={styles.secondaryButtonText}>Back to Markets</Text>
-        </TouchableOpacity>
-
-        <View style={styles.shareSection}>
-          <View style={styles.shareContainer}>
-            <View style={styles.shareTitleRow}>
-              <Text style={styles.shareText}>Share your position</Text>
-              <Icon name="share-social" size={20} color="#7C3AED" />
+          <View style={styles.card}>
+            <Text style={styles.sectionTitle}>Order Details</Text>
+            
+            <View style={styles.detailRow}>
+              <Text style={styles.detailLabel}>Market</Text>
+              <Text style={styles.detailValue}>{marketQuestion}</Text>
             </View>
-            <View style={styles.shareButtons}>
-              <TouchableOpacity style={[styles.shareButton, styles.twitterButton]}>
-                <Icon name="logo-twitter" size={24} color="#FFFFFF" />
-              </TouchableOpacity>
-              <TouchableOpacity style={[styles.shareButton, styles.telegramButton]}>
-                <Icon name="paper-plane" size={24} color="#FFFFFF" />
-              </TouchableOpacity>
-              <TouchableOpacity style={[styles.shareButton, styles.linkButton]}>
-                <Icon name="link" size={24} color="#FFFFFF" />
-              </TouchableOpacity>
+
+            <View style={styles.divider} />
+
+            <View style={styles.detailRow}>
+              <Text style={styles.detailLabel}>Position</Text>
+              <Text style={[styles.detailValue, styles.positionValue]}>Yes @ {probability}%</Text>
+            </View>
+
+            <View style={styles.divider} />
+
+            <View style={styles.detailRow}>
+              <Text style={styles.detailLabel}>Stake Amount</Text>
+              <Text style={styles.detailValue}>${stake.toFixed(2)}</Text>
+            </View>
+
+            <View style={styles.divider} />
+
+            <View style={styles.detailRow}>
+              <Text style={styles.detailLabel}>Transaction Fee</Text>
+              <Text style={styles.detailValue}>${fee.toFixed(2)}</Text>
+            </View>
+
+            <View style={styles.divider} />
+
+            <View style={[styles.detailRow]}>
+              <Text style={styles.detailLabel}>Potential Profit</Text>
+              <Text style={[styles.detailValue, styles.profitValue]}>+${potentialProfit.toFixed(2)}</Text>
             </View>
           </View>
+
+          <TouchableOpacity
+            style={styles.primaryButton}
+            onPress={() => navigation.navigate('Positions')}
+          >
+            <Text style={styles.primaryButtonText}>View My Positions</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.secondaryButton}
+            onPress={() => navigation.navigate('Main', { screen: 'Markets' })}
+          >
+            <Text style={styles.secondaryButtonText}>Back to Markets</Text>
+          </TouchableOpacity>
+
+          <View style={styles.shareSection}>
+            <View style={styles.shareContainer}>
+              <View style={styles.shareTitleRow}>
+                <Text style={styles.shareText}>Share your position</Text>
+                <Icon name="share-social" size={20} color="#7C3AED" />
+              </View>
+              <View style={styles.shareButtons}>
+                <TouchableOpacity style={[styles.shareButton, styles.twitterButton]}>
+                  <Icon name="logo-twitter" size={24} color="#FFFFFF" />
+                </TouchableOpacity>
+                <TouchableOpacity style={[styles.shareButton, styles.telegramButton]}>
+                  <Icon name="paper-plane" size={24} color="#FFFFFF" />
+                </TouchableOpacity>
+                <TouchableOpacity style={[styles.shareButton, styles.linkButton]}>
+                  <Icon name="link" size={24} color="#FFFFFF" />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
         </View>
-      </View>
-    </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  scrollView: {
+    flex: 1,
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+  },
   container: {
     flex: 1,
     backgroundColor: '#111827',
@@ -269,8 +283,8 @@ const styles = StyleSheet.create({
   shareSection: {
     width: '100%',
     paddingHorizontal: 16,
-    marginTop: 'auto',
-    marginBottom: 16,
+    marginTop: 24,
+    marginBottom: 24,
   },
   shareContainer: {
     backgroundColor: '#1F2937',

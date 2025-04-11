@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
   TextInput,
+  ScrollView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import type { RootStackScreenProps } from '../navigation/types';
@@ -57,111 +58,117 @@ const CreateMarket3: React.FC<RootStackScreenProps<'CreateMarket3'>> = ({ naviga
         </View>
       </View>
 
-      {/* Content Section */}
-      <View style={styles.contentSection}>
-        <Text style={styles.sectionTitle}>Market Outcomes</Text>
-        <Text style={styles.description}>
-          Define the possible outcomes for your prediction market.
-        </Text>
-
-        {/* Market Type Selection */}
-        <View style={styles.typeSelection}>
-          <TouchableOpacity 
-            style={[
-              styles.typeButton,
-              selectedType === 'binary' && styles.typeButtonSelected
-            ]}
-            onPress={() => setSelectedType('binary')}
-          >
-            <Text style={[
-              styles.typeButtonText,
-              selectedType === 'binary' && styles.typeButtonTextSelected
-            ]}>Binary (Yes/No)</Text>
-          </TouchableOpacity>
-          <TouchableOpacity 
-            style={[
-              styles.typeButton,
-              selectedType === 'multiple' && styles.typeButtonSelected
-            ]}
-            onPress={() => setSelectedType('multiple')}
-          >
-            <Text style={[
-              styles.typeButtonText,
-              selectedType === 'multiple' && styles.typeButtonTextSelected
-            ]}>Multiple Choice</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Yes Outcome */}
-        <View style={styles.outcomeCard}>
-          <View style={styles.outcomeHeader}>
-            <Text style={styles.outcomeTitle}>Yes Outcome</Text>
-            <View style={styles.outcomeTag}>
-              <Text style={styles.outcomeTagText}>Yes</Text>
-            </View>
-          </View>
-          <TextInput
-            style={styles.outcomeInput}
-            value={yesOutcome}
-            onChangeText={setYesOutcome}
-            placeholder="Yes"
-            placeholderTextColor="#9CA3AF"
-            editable={false}
-          />
-          <TextInput
-            style={styles.outcomeDescriptionInput}
-            value={yesDescription}
-            onChangeText={setYesDescription}
-            placeholder="Add description (optional)"
-            placeholderTextColor="#9CA3AF"
-            multiline
-          />
-        </View>
-
-        {/* No Outcome */}
-        <View style={styles.outcomeCard}>
-          <View style={styles.outcomeHeader}>
-            <Text style={styles.outcomeTitle}>No Outcome</Text>
-            <View style={[styles.outcomeTag, styles.outcomeTagNo]}>
-              <Text style={styles.outcomeTagText}>No</Text>
-            </View>
-          </View>
-          <TextInput
-            style={styles.outcomeInput}
-            value={noOutcome}
-            onChangeText={setNoOutcome}
-            placeholder="No"
-            placeholderTextColor="#9CA3AF"
-            editable={false}
-          />
-          <TextInput
-            style={styles.outcomeDescriptionInput}
-            value={noDescription}
-            onChangeText={setNoDescription}
-            placeholder="Add description (optional)"
-            placeholderTextColor="#9CA3AF"
-            multiline
-          />
-        </View>
-
-        {/* Resolution Source */}
-        <View style={styles.resolutionCard}>
-          <View style={styles.resolutionHeader}>
-            <Icon name="information-circle" size={20} color="#8B5CF6" />
-            <Text style={styles.resolutionTitle}>Resolution Source</Text>
-          </View>
-          <Text style={styles.resolutionDescription}>
-            Specify where the outcome will be verified
+      <ScrollView 
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollViewContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Content Section */}
+        <View style={styles.contentSection}>
+          <Text style={styles.sectionTitle}>Market Outcomes</Text>
+          <Text style={styles.description}>
+            Define the possible outcomes for your prediction market.
           </Text>
-          <TextInput
-            style={styles.resolutionInput}
-            value={resolutionSource}
-            onChangeText={setResolutionSource}
-            placeholder="Enter URL or description of resolution source"
-            placeholderTextColor="#9CA3AF"
-          />
+
+          {/* Market Type Selection */}
+          <View style={styles.typeSelection}>
+            <TouchableOpacity 
+              style={[
+                styles.typeButton,
+                selectedType === 'binary' && styles.typeButtonSelected
+              ]}
+              onPress={() => setSelectedType('binary')}
+            >
+              <Text style={[
+                styles.typeButtonText,
+                selectedType === 'binary' && styles.typeButtonTextSelected
+              ]}>Binary (Yes/No)</Text>
+            </TouchableOpacity>
+            <TouchableOpacity 
+              style={[
+                styles.typeButton,
+                selectedType === 'multiple' && styles.typeButtonSelected
+              ]}
+              onPress={() => setSelectedType('multiple')}
+            >
+              <Text style={[
+                styles.typeButtonText,
+                selectedType === 'multiple' && styles.typeButtonTextSelected
+              ]}>Multiple Choice</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Yes Outcome */}
+          <View style={styles.outcomeCard}>
+            <View style={styles.outcomeHeader}>
+              <Text style={styles.outcomeTitle}>Yes Outcome</Text>
+              <View style={styles.outcomeTag}>
+                <Text style={styles.outcomeTagText}>Yes</Text>
+              </View>
+            </View>
+            <TextInput
+              style={styles.outcomeInput}
+              value={yesOutcome}
+              onChangeText={setYesOutcome}
+              placeholder="Yes"
+              placeholderTextColor="#9CA3AF"
+              editable={false}
+            />
+            <TextInput
+              style={styles.outcomeDescriptionInput}
+              value={yesDescription}
+              onChangeText={setYesDescription}
+              placeholder="Add description (optional)"
+              placeholderTextColor="#9CA3AF"
+              multiline
+            />
+          </View>
+
+          {/* No Outcome */}
+          <View style={styles.outcomeCard}>
+            <View style={styles.outcomeHeader}>
+              <Text style={styles.outcomeTitle}>No Outcome</Text>
+              <View style={[styles.outcomeTag, styles.outcomeTagNo]}>
+                <Text style={styles.outcomeTagText}>No</Text>
+              </View>
+            </View>
+            <TextInput
+              style={styles.outcomeInput}
+              value={noOutcome}
+              onChangeText={setNoOutcome}
+              placeholder="No"
+              placeholderTextColor="#9CA3AF"
+              editable={false}
+            />
+            <TextInput
+              style={styles.outcomeDescriptionInput}
+              value={noDescription}
+              onChangeText={setNoDescription}
+              placeholder="Add description (optional)"
+              placeholderTextColor="#9CA3AF"
+              multiline
+            />
+          </View>
+
+          {/* Resolution Source */}
+          <View style={styles.resolutionCard}>
+            <View style={styles.resolutionHeader}>
+              <Icon name="information-circle" size={20} color="#8B5CF6" />
+              <Text style={styles.resolutionTitle}>Resolution Source</Text>
+            </View>
+            <Text style={styles.resolutionDescription}>
+              Specify where the outcome will be verified
+            </Text>
+            <TextInput
+              style={styles.resolutionInput}
+              value={resolutionSource}
+              onChangeText={setResolutionSource}
+              placeholder="Enter URL or description of resolution source"
+              placeholderTextColor="#9CA3AF"
+            />
+          </View>
         </View>
-      </View>
+      </ScrollView>
 
       {/* Bottom Buttons */}
       <View style={styles.bottomButtons}>
@@ -239,17 +246,23 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   progressBar: {
-    height: 8,
+    height: 6,
     backgroundColor: '#1E1E2D',
-    borderRadius: 4,
+    borderRadius: 3,
   },
   progressFill: {
     height: '100%',
     backgroundColor: '#8B5CF6',
-    borderRadius: 4,
+    borderRadius: 3,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+    paddingBottom: 24,
   },
   contentSection: {
-    flex: 1,
     paddingHorizontal: 16,
   },
   sectionTitle: {

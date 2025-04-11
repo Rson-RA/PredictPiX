@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
   TextInput,
+  ScrollView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import type { RootStackScreenProps } from '../navigation/types';
@@ -54,85 +55,91 @@ const CreateMarket1: React.FC<RootStackScreenProps<'CreateMarket1'>> = ({ naviga
         </View>
       </View>
 
-      {/* Title Section */}
-      <View style={styles.contentSection}>
-        <Text style={styles.sectionTitle}>Market Title</Text>
-        <Text style={styles.description}>
-          Create a clear and specific title for your prediction market. Make it easy to understand and verify.
-        </Text>
+      <ScrollView 
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollViewContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Title Section */}
+        <View style={styles.contentSection}>
+          <Text style={styles.sectionTitle}>Market Title</Text>
+          <Text style={styles.description}>
+            Create a clear and specific title for your prediction market. Make it easy to understand and verify.
+          </Text>
 
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter market title"
-            placeholderTextColor="#9CA3AF"
-            value={title}
-            onChangeText={setTitle}
-            multiline
-            maxLength={100}
-          />
-          <Text style={styles.charCount}>{title.length}/100</Text>
-          {isValidLength && (
-            <View style={styles.validIcon}>
-              <Icon name="checkmark-circle" size={20} color="#10B981" />
-              <Text style={styles.validText}>Valid length</Text>
-            </View>
-          )}
-        </View>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter market title"
+              placeholderTextColor="#9CA3AF"
+              value={title}
+              onChangeText={setTitle}
+              multiline
+              maxLength={100}
+            />
+            <Text style={styles.charCount}>{title.length}/100</Text>
+            {isValidLength && (
+              <View style={styles.validIcon}>
+                <Icon name="checkmark-circle" size={20} color="#10B981" />
+                <Text style={styles.validText}>Valid length</Text>
+              </View>
+            )}
+          </View>
 
-        {/* Requirements */}
-        <View style={styles.requirementsContainer}>
-          <Text style={styles.requirementsTitle}>Title Requirements:</Text>
-          <View style={styles.requirement}>
-            <Icon 
-              name={title.length >= 10 ? "checkmark-circle" : "ellipse-outline"} 
-              size={20} 
-              color={title.length >= 10 ? "#10B981" : "#6B7280"} 
-            />
-            <Text style={styles.requirementText}>Minimum 10 characters</Text>
+          {/* Requirements */}
+          <View style={styles.requirementsContainer}>
+            <Text style={styles.requirementsTitle}>Title Requirements:</Text>
+            <View style={styles.requirement}>
+              <Icon 
+                name={title.length >= 10 ? "checkmark-circle" : "ellipse-outline"} 
+                size={20} 
+                color={title.length >= 10 ? "#10B981" : "#6B7280"} 
+              />
+              <Text style={styles.requirementText}>Minimum 10 characters</Text>
+            </View>
+            <View style={styles.requirement}>
+              <Icon 
+                name={title.length <= 100 ? "checkmark-circle" : "ellipse-outline"} 
+                size={20} 
+                color={title.length <= 100 ? "#10B981" : "#6B7280"} 
+              />
+              <Text style={styles.requirementText}>Maximum 100 characters</Text>
+            </View>
+            <View style={styles.requirement}>
+              <Icon 
+                name={title.length >= 10 ? "checkmark-circle" : "ellipse-outline"} 
+                size={20} 
+                color={title.length >= 10 ? "#10B981" : "#6B7280"} 
+              />
+              <Text style={styles.requirementText}>Clear and specific</Text>
+            </View>
           </View>
-          <View style={styles.requirement}>
-            <Icon 
-              name={title.length <= 100 ? "checkmark-circle" : "ellipse-outline"} 
-              size={20} 
-              color={title.length <= 100 ? "#10B981" : "#6B7280"} 
-            />
-            <Text style={styles.requirementText}>Maximum 100 characters</Text>
-          </View>
-          <View style={styles.requirement}>
-            <Icon 
-              name={title.length >= 10 ? "checkmark-circle" : "ellipse-outline"} 
-              size={20} 
-              color={title.length >= 10 ? "#10B981" : "#6B7280"} 
-            />
-            <Text style={styles.requirementText}>Clear and specific</Text>
-          </View>
-        </View>
 
-        {/* Example Titles */}
-        <View style={styles.examplesContainer}>
-          <View style={styles.examplesHeader}>
-            <Text style={styles.examplesTitle}>Example Titles:</Text>
-            <TouchableOpacity>
-              <Text style={styles.seeMoreText}>See More</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.examples}>
-            <View style={styles.example}>
-              <Icon name="ellipse" size={8} color="#8B5CF6" />
-              <Text style={styles.exampleText}>Will Bitcoin reach $100k by end of 2025?</Text>
+          {/* Example Titles */}
+          <View style={styles.examplesContainer}>
+            <View style={styles.examplesHeader}>
+              <Text style={styles.examplesTitle}>Example Titles:</Text>
+              <TouchableOpacity>
+                <Text style={styles.seeMoreText}>See More</Text>
+              </TouchableOpacity>
             </View>
-            <View style={styles.example}>
-              <Icon name="ellipse" size={8} color="#8B5CF6" />
-              <Text style={styles.exampleText}>Will SpaceX launch Starship successfully in 2025?</Text>
-            </View>
-            <View style={styles.example}>
-              <Icon name="ellipse" size={8} color="#8B5CF6" />
-              <Text style={styles.exampleText}>Will Tesla release a sub-$30k EV in 2025?</Text>
+            <View style={styles.examples}>
+              <View style={styles.example}>
+                <Icon name="ellipse" size={8} color="#8B5CF6" />
+                <Text style={styles.exampleText}>Will Bitcoin reach $100k by end of 2025?</Text>
+              </View>
+              <View style={styles.example}>
+                <Icon name="ellipse" size={8} color="#8B5CF6" />
+                <Text style={styles.exampleText}>Will SpaceX launch Starship successfully in 2025?</Text>
+              </View>
+              <View style={styles.example}>
+                <Icon name="ellipse" size={8} color="#8B5CF6" />
+                <Text style={styles.exampleText}>Will Tesla release a sub-$30k EV in 2025?</Text>
+              </View>
             </View>
           </View>
         </View>
-      </View>
+      </ScrollView>
 
       {/* Bottom Buttons */}
       <View style={styles.bottomButtons}>
@@ -220,8 +227,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#8B5CF6',
     borderRadius: 3,
   },
-  contentSection: {
+  scrollView: {
     flex: 1,
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+    paddingBottom: 24,
+  },
+  contentSection: {
     paddingHorizontal: 16,
   },
   sectionTitle: {

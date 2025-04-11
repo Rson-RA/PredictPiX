@@ -24,7 +24,7 @@ export const colors = {
   navigation: {
     active: '#7c3aed',
     inactive: '#6b7280',
-    background: '#1a1b1e',
+    background: '#111827F2',
   },
 };
 

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Dimensions} from 'react-native';
+import {View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Dimensions, ScrollView} from 'react-native';
 import type {RootTabScreenProps} from '../navigation/types';
 import {Card, Button, IconButton} from '../components';
 import {colors, typography, spacing} from '../styles/theme';
@@ -32,130 +32,143 @@ export default function PortfolioScreen({
 
   return (
     <SafeAreaView style={commonStyles.screen}>
-      <View style={commonStyles.container}>
-        {/* Balance Card */}
-        <Card style={styles.balanceCard}>
-          <View style={styles.balanceHeader}>
-            <Text style={styles.balanceLabel}>Total Balance</Text>
-            <IconButton name="eye" size={20} onPress={() => {}} />
-          </View>
-          <Text style={styles.balanceAmount}>$2,458.65</Text>
-          <Text style={styles.balanceChange}>+$245.50 (24h)</Text>
-          <View style={styles.buttonContainer}>
-            <Button 
-              label="Deposit" 
-              onPress={() => {}} 
-              style={styles.depositButton} 
-            />
-            <View style={styles.buttonSpacer} />
-            <Button
-              label="Withdraw"
-              variant="secondary"
-              onPress={() => {}}
-              style={styles.withdrawButton}
-            />
-          </View>
-        </Card>
-
-        {/* Performance Chart */}
-        <Card style={styles.chartCard}>
-          <View style={styles.chartHeader}>
-            <Text style={styles.sectionTitle}>Performance</Text>
-            <View style={styles.periodSelector}>
-              {TIME_PERIODS.map(period => (
-                <TouchableOpacity
-                  key={period}
-                  style={[
-                    styles.periodButton,
-                    selectedPeriod === period && styles.periodButtonActive,
-                  ]}
-                  onPress={() => setSelectedPeriod(period)}>
-                  <Text
-                    style={[
-                      styles.periodButtonText,
-                      selectedPeriod === period && styles.periodButtonTextActive,
-                    ]}>
-                    {period}
-                  </Text>
-                </TouchableOpacity>
-              ))}
+      <ScrollView 
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollViewContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={commonStyles.container}>
+          {/* Balance Card */}
+          <Card style={styles.balanceCard}>
+            <View style={styles.balanceHeader}>
+              <Text style={styles.balanceLabel}>Total Balance</Text>
+              <IconButton name="eye" size={20} onPress={() => {}} />
             </View>
-          </View>
-          <View style={styles.chartWrapper}>
-            <LineChart
-              data={{
-                labels: [],
-                datasets: [{ data: MOCK_CHART_DATA }],
-              }}
-              width={width}
-              height={300}
-              chartConfig={{
-                backgroundColor: 'transparent',
-                backgroundGradientFrom: 'transparent',
-                backgroundGradientTo: 'transparent',
-                decimalPlaces: 0,
-                color: (opacity = 1) => `rgba(233, 125, 255, ${opacity})`,
-                labelColor: (opacity = 1) => `rgba(143, 155, 179, ${opacity})`,
-                propsForLabels: {
-                  fontSize: 12,
-                },
-                formatYLabel: (value) => `$${value}`,
-                style: {
-                  borderRadius: 16,
-                },
-              }}
-              bezier
-              yAxisLabel=""
-              yAxisInterval={1}
-              style={styles.chart}
-              withDots={false}
-              withVerticalLines={false}
-              withHorizontalLines={false}
-              withVerticalLabels={true}
-              withHorizontalLabels={true}
-            />
-          </View>
-        </Card>
+            <Text style={styles.balanceAmount}>$2,458.65</Text>
+            <Text style={styles.balanceChange}>+$245.50 (24h)</Text>
+            <View style={styles.buttonContainer}>
+              <Button 
+                label="Deposit" 
+                onPress={() => {}} 
+                style={styles.depositButton} 
+              />
+              <View style={styles.buttonSpacer} />
+              <Button
+                label="Withdraw"
+                variant="secondary"
+                onPress={() => {}}
+                style={styles.withdrawButton}
+              />
+            </View>
+          </Card>
 
-        {/* Active Predictions */}
-        <View style={styles.predictionsHeader}>
-          <Text style={styles.sectionTitle}>Active Predictions</Text>
-          <TouchableOpacity onPress={() => {}}>
-            <Text style={styles.viewAll}>View All</Text>
-          </TouchableOpacity>
+          {/* Performance Chart */}
+          <Card style={styles.chartCard}>
+            <View style={styles.chartHeader}>
+              <Text style={styles.sectionTitle}>Performance</Text>
+              <View style={styles.periodSelector}>
+                {TIME_PERIODS.map(period => (
+                  <TouchableOpacity
+                    key={period}
+                    style={[
+                      styles.periodButton,
+                      selectedPeriod === period && styles.periodButtonActive,
+                    ]}
+                    onPress={() => setSelectedPeriod(period)}>
+                    <Text
+                      style={[
+                        styles.periodButtonText,
+                        selectedPeriod === period && styles.periodButtonTextActive,
+                      ]}>
+                      {period}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+            <View style={styles.chartWrapper}>
+              <LineChart
+                data={{
+                  labels: [],
+                  datasets: [{ data: MOCK_CHART_DATA }],
+                }}
+                width={width}
+                height={200}
+                chartConfig={{
+                  backgroundColor: 'transparent',
+                  backgroundGradientFrom: 'transparent',
+                  backgroundGradientTo: 'transparent',
+                  decimalPlaces: 0,
+                  color: (opacity = 1) => `rgba(233, 125, 255, ${opacity})`,
+                  labelColor: (opacity = 1) => `rgba(143, 155, 179, ${opacity})`,
+                  propsForLabels: {
+                    fontSize: 12,
+                  },
+                  formatYLabel: (value) => `$${value}`,
+                  style: {
+                    borderRadius: 16,
+                  },
+                }}
+                bezier
+                yAxisLabel=""
+                yAxisInterval={1}
+                style={styles.chart}
+                withDots={false}
+                withVerticalLines={false}
+                withHorizontalLines={false}
+                withVerticalLabels={true}
+                withHorizontalLabels={true}
+              />
+            </View>
+          </Card>
+
+          {/* Active Predictions */}
+          <View style={styles.predictionsHeader}>
+            <Text style={styles.sectionTitle}>Active Predictions</Text>
+            <TouchableOpacity onPress={() => {}}>
+              <Text style={styles.viewAll}>View All</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Crypto Prediction */}
+          <Card style={styles.predictionCard}>
+            <View style={styles.predictionHeader}>
+              <Text style={styles.predictionCategory}>Crypto</Text>
+              <Text style={styles.profitAmount}>+$125.50</Text>
+            </View>
+            <Text style={styles.predictionTitle}>BTC {'>'} $100k by Dec 2025</Text>
+            <View style={styles.predictionDetails}>
+              <Text style={styles.predictionPosition}>Yes @ 0.67¢</Text>
+              <Text style={styles.predictionAmount}>$500 invested</Text>
+            </View>
+          </Card>
+
+          {/* Sports Prediction */}
+          <Card style={styles.predictionCard}>
+            <View style={styles.predictionHeader}>
+              <Text style={styles.predictionCategory}>Sports</Text>
+              <Text style={[styles.profitAmount, styles.lossAmount]}>-$45.30</Text>
+            </View>
+            <Text style={styles.predictionTitle}>Lakers NBA Champions 2025</Text>
+            <View style={styles.predictionDetails}>
+              <Text style={styles.predictionPosition}>No @ 0.55¢</Text>
+              <Text style={styles.predictionAmount}>$300 invested</Text>
+            </View>
+          </Card>
         </View>
-
-        {/* Crypto Prediction */}
-        <Card style={styles.predictionCard}>
-          <View style={styles.predictionHeader}>
-            <Text style={styles.predictionCategory}>Crypto</Text>
-            <Text style={styles.profitAmount}>+$125.50</Text>
-          </View>
-          <Text style={styles.predictionTitle}>BTC {'>'} $100k by Dec 2025</Text>
-          <View style={styles.predictionDetails}>
-            <Text style={styles.predictionPosition}>Yes @ 0.67¢</Text>
-            <Text style={styles.predictionAmount}>$500 invested</Text>
-          </View>
-        </Card>
-
-        {/* Sports Prediction */}
-        <Card style={styles.predictionCard}>
-          <View style={styles.predictionHeader}>
-            <Text style={styles.predictionCategory}>Sports</Text>
-            <Text style={[styles.profitAmount, styles.lossAmount]}>-$45.30</Text>
-          </View>
-          <Text style={styles.predictionTitle}>Lakers NBA Champions 2025</Text>
-          <View style={styles.predictionDetails}>
-            <Text style={styles.predictionPosition}>No @ 0.55¢</Text>
-            <Text style={styles.predictionAmount}>$300 invested</Text>
-          </View>
-        </Card>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  scrollView: {
+    flex: 1,
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+    paddingBottom: spacing.xl,
+  },
   screen: {
     flex: 1,
     backgroundColor: '#111827',

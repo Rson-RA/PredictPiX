@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, SafeAreaView, Image} from 'react-native';
+import {View, Text, StyleSheet, SafeAreaView, Image, ScrollView} from 'react-native';
 import type {RootTabScreenProps} from '../navigation/types';
 import {Card, Switch, TextField, IconButton} from '../components';
 import {colors, typography, spacing, borderRadius} from '../styles/theme';
@@ -28,104 +28,117 @@ export default function ProfileScreen({navigation}: RootTabScreenProps<'Profile'
 
   return (
     <SafeAreaView style={commonStyles.screen}>
-      <View style={commonStyles.container}>
-        {/* Profile Info */}
-        <View style={styles.profileInfo}>
-          <View style={styles.profileImageContainer}>
-            <Image
-              source={require('../assets/profile-pic.png')}
-              style={styles.profilePic}
+      <ScrollView 
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollViewContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={commonStyles.container}>
+          {/* Profile Info */}
+          <View style={styles.profileInfo}>
+            <View style={styles.profileImageContainer}>
+              <Image
+                source={require('../assets/profile-pic.png')}
+                style={styles.profilePic}
+              />
+              <View style={styles.cameraButton}>
+                <MaterialIcon name="photo-camera" size={20} color="#FFFFFF" />
+              </View>
+            </View>
+            <Text style={styles.name}>Alex Thompson</Text>
+            <Text style={styles.username}>@alexthompson</Text>
+            <View style={commonStyles.rowBetween}>
+              <View style={styles.stat}>
+                <Text style={styles.statValue}>245</Text>
+                <Text style={styles.statLabel}>Predictions</Text>
+              </View>
+              <View style={styles.stat}>
+                <Text style={styles.statValue}>$12.5k</Text>
+                <Text style={styles.statLabel}>Earnings</Text>
+              </View>
+            </View>
+          </View>
+
+          {/* Connected Accounts */}
+          <Card>
+            <Text style={styles.sectionTitle}>Connected Accounts</Text>
+            <View style={styles.accountItem}>
+              <View style={commonStyles.row}>
+                <Icon name="twitter" size={24} color="#1DA1F2" />
+                <Text style={styles.accountName}>Twitter</Text>
+              </View>
+              <Text style={styles.connectButton}>Connect</Text>
+            </View>
+            <View style={styles.accountItem}>
+              <View style={commonStyles.row}>
+                <MaterialIcon name="discord" size={24} color="#7289DA" />
+                <Text style={styles.accountName}>Discord</Text>
+              </View>
+              <Text style={[styles.connectButton, styles.connected]}>Connected</Text>
+            </View>
+            <View style={styles.accountItem}>
+              <View style={commonStyles.row}>
+                <MaterialIcon name="telegram" size={24} color="#0088cc" />
+                <Text style={styles.accountName}>Telegram</Text>
+              </View>
+              <Text style={styles.connectButton}>Connect</Text>
+            </View>
+          </Card>
+
+          {/* Referral Program */}
+          <Card>
+            <Text style={styles.sectionTitle}>Referral Program</Text>
+            <TextField
+              label="Your Referral Code"
+              value="ALEX2025"
+              readOnly
+              onCopy={() => {/* Implement copy functionality */}}
             />
-            <View style={styles.cameraButton}>
-              <MaterialIcon name="photo-camera" size={20} color="#FFFFFF" />
+            <View style={commonStyles.rowBetween}>
+              <View style={styles.referralStat}>
+                <Text style={styles.referralLabel}>Total Referrals</Text>
+                <Text style={styles.referralValue}>23 users</Text>
+              </View>
+              <View style={styles.referralStat}>
+                <Text style={styles.referralLabel}>Earned</Text>
+                <Text style={styles.referralValue}>$156.00</Text>
+              </View>
             </View>
-          </View>
-          <Text style={styles.name}>Alex Thompson</Text>
-          <Text style={styles.username}>@alexthompson</Text>
-          <View style={commonStyles.rowBetween}>
-            <View style={styles.stat}>
-              <Text style={styles.statValue}>245</Text>
-              <Text style={styles.statLabel}>Predictions</Text>
+            <View style={styles.referralButton}>
+              <Text style={styles.referralButtonText}>Copy Referral Link</Text>
             </View>
-            <View style={styles.stat}>
-              <Text style={styles.statValue}>$12.5k</Text>
-              <Text style={styles.statLabel}>Earnings</Text>
-            </View>
-          </View>
+          </Card>
+
+          {/* Notification Settings */}
+          <Card>
+            <Text style={styles.sectionTitle}>Notification Settings</Text>
+            <Switch
+              label="Market Updates"
+              description="Get notified about your active markets"
+              value={marketUpdates}
+              onValueChange={setMarketUpdates}
+            />
+            <Switch
+              label="New Features"
+              description="Stay updated with platform updates"
+              value={newFeatures}
+              onValueChange={setNewFeatures}
+            />
+          </Card>
         </View>
-
-        {/* Connected Accounts */}
-        <Card>
-          <Text style={styles.sectionTitle}>Connected Accounts</Text>
-          <View style={styles.accountItem}>
-            <View style={commonStyles.row}>
-              <Icon name="twitter" size={24} color="#1DA1F2" />
-              <Text style={styles.accountName}>Twitter</Text>
-            </View>
-            <Text style={styles.connectButton}>Connect</Text>
-          </View>
-          <View style={styles.accountItem}>
-            <View style={commonStyles.row}>
-              <MaterialIcon name="discord" size={24} color="#7289DA" />
-              <Text style={styles.accountName}>Discord</Text>
-            </View>
-            <Text style={[styles.connectButton, styles.connected]}>Connected</Text>
-          </View>
-          <View style={styles.accountItem}>
-            <View style={commonStyles.row}>
-              <MaterialIcon name="telegram" size={24} color="#0088cc" />
-              <Text style={styles.accountName}>Telegram</Text>
-            </View>
-            <Text style={styles.connectButton}>Connect</Text>
-          </View>
-        </Card>
-
-        {/* Referral Program */}
-        <Card>
-          <Text style={styles.sectionTitle}>Referral Program</Text>
-          <TextField
-            label="Your Referral Code"
-            value="ALEX2025"
-            readOnly
-            onCopy={() => {/* Implement copy functionality */}}
-          />
-          <View style={commonStyles.rowBetween}>
-            <View style={styles.referralStat}>
-              <Text style={styles.referralLabel}>Total Referrals</Text>
-              <Text style={styles.referralValue}>23 users</Text>
-            </View>
-            <View style={styles.referralStat}>
-              <Text style={styles.referralLabel}>Earned</Text>
-              <Text style={styles.referralValue}>$156.00</Text>
-            </View>
-          </View>
-          <View style={styles.referralButton}>
-            <Text style={styles.referralButtonText}>Copy Referral Link</Text>
-          </View>
-        </Card>
-
-        {/* Notification Settings */}
-        <Card>
-          <Text style={styles.sectionTitle}>Notification Settings</Text>
-          <Switch
-            label="Market Updates"
-            description="Get notified about your active markets"
-            value={marketUpdates}
-            onValueChange={setMarketUpdates}
-          />
-          <Switch
-            label="New Features"
-            description="Stay updated with platform updates"
-            value={newFeatures}
-            onValueChange={setNewFeatures}
-          />
-        </Card>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  scrollView: {
+    flex: 1,
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+    paddingBottom: spacing.xl,
+  },
   screen: {
     flex: 1,
     backgroundColor: '#111827',

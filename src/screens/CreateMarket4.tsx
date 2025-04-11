@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   SafeAreaView,
+  ScrollView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import type { RootStackScreenProps } from '../navigation/types';
@@ -59,76 +60,82 @@ const CreateMarket4: React.FC<RootStackScreenProps<'CreateMarket4'>> = ({ naviga
         </View>
       </View>
 
-      {/* Content Section */}
-      <View style={styles.contentSection}>
-        {/* Market Title */}
-        <View style={styles.reviewCard}>
-          <View style={styles.reviewHeader}>
-            <Text style={styles.reviewTitle}>Market Title</Text>
-            <TouchableOpacity onPress={() => handleEdit('title')}>
-              <View style={styles.editButton}>
-                <Icon name="pencil" size={16} color="#8B5CF6" />
-                <Text style={styles.editButtonText}>Edit</Text>
-              </View>
-            </TouchableOpacity>
+      <ScrollView 
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollViewContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Content Section */}
+        <View style={styles.contentSection}>
+          {/* Market Title */}
+          <View style={styles.reviewCard}>
+            <View style={styles.reviewHeader}>
+              <Text style={styles.reviewTitle}>Market Title</Text>
+              <TouchableOpacity onPress={() => handleEdit('title')}>
+                <View style={styles.editButton}>
+                  <Icon name="pencil" size={16} color="#8B5CF6" />
+                  <Text style={styles.editButtonText}>Edit</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.reviewContent}>Will Bitcoin reach $100k by end of 2025?</Text>
           </View>
-          <Text style={styles.reviewContent}>Will Bitcoin reach $100k by end of 2025?</Text>
-        </View>
 
-        {/* Description */}
-        <View style={styles.reviewCard}>
-          <View style={styles.reviewHeader}>
-            <Text style={styles.reviewTitle}>Description</Text>
-            <TouchableOpacity onPress={() => handleEdit('description')}>
-              <View style={styles.editButton}>
-                <Icon name="pencil" size={16} color="#8B5CF6" />
-                <Text style={styles.editButtonText}>Edit</Text>
-              </View>
-            </TouchableOpacity>
+          {/* Description */}
+          <View style={styles.reviewCard}>
+            <View style={styles.reviewHeader}>
+              <Text style={styles.reviewTitle}>Description</Text>
+              <TouchableOpacity onPress={() => handleEdit('description')}>
+                <View style={styles.editButton}>
+                  <Icon name="pencil" size={16} color="#8B5CF6" />
+                  <Text style={styles.editButtonText}>Edit</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.reviewContent}>
+              This market will resolve to YES if Bitcoin reaches or exceeds $100,000 USD on any major cryptocurrency exchange before December 31st, 2025.
+            </Text>
           </View>
-          <Text style={styles.reviewContent}>
-            This market will resolve to YES if Bitcoin reaches or exceeds $100,000 USD on any major cryptocurrency exchange before December 31st, 2025.
-          </Text>
-        </View>
 
-        {/* Outcomes */}
-        <View style={styles.reviewCard}>
-          <View style={styles.reviewHeader}>
-            <Text style={styles.reviewTitle}>Outcomes</Text>
-            <TouchableOpacity onPress={() => handleEdit('outcomes')}>
-              <View style={styles.editButton}>
-                <Icon name="pencil" size={16} color="#8B5CF6" />
-                <Text style={styles.editButtonText}>Edit</Text>
+          {/* Outcomes */}
+          <View style={styles.reviewCard}>
+            <View style={styles.reviewHeader}>
+              <Text style={styles.reviewTitle}>Outcomes</Text>
+              <TouchableOpacity onPress={() => handleEdit('outcomes')}>
+                <View style={styles.editButton}>
+                  <Icon name="pencil" size={16} color="#8B5CF6" />
+                  <Text style={styles.editButtonText}>Edit</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.outcomesContainer}>
+              <View style={styles.outcomeCard}>
+                <View style={styles.outcomeItem}>
+                  <View style={styles.outcomeIndicatorYes} />
+                  <Text style={styles.outcomeText}>Yes</Text>
+                </View>
               </View>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.outcomesContainer}>
-            <View style={styles.outcomeCard}>
-              <View style={styles.outcomeItem}>
-                <View style={styles.outcomeIndicatorYes} />
-                <Text style={styles.outcomeText}>Yes</Text>
+              <View style={styles.outcomeCard}>
+                <View style={styles.outcomeItem}>
+                  <View style={styles.outcomeIndicatorNo} />
+                  <Text style={styles.outcomeText}>No</Text>
+                </View>
               </View>
             </View>
-            <View style={styles.outcomeCard}>
-              <View style={styles.outcomeItem}>
-                <View style={styles.outcomeIndicatorNo} />
-                <Text style={styles.outcomeText}>No</Text>
-              </View>
-            </View>
           </View>
-        </View>
 
-        {/* Ready to Launch */}
-        <View style={styles.launchCard}>
-          <View style={styles.launchHeader}>
-            <Icon name="information-circle" size={20} color="#8B5CF6" />
-            <Text style={styles.launchTitle}>Ready to Launch?</Text>
+          {/* Ready to Launch */}
+          <View style={styles.launchCard}>
+            <View style={styles.launchHeader}>
+              <Icon name="information-circle" size={20} color="#8B5CF6" />
+              <Text style={styles.launchTitle}>Ready to Launch?</Text>
+            </View>
+            <Text style={styles.launchDescription}>
+              Once submitted, your market will be reviewed by our team before going live.
+            </Text>
           </View>
-          <Text style={styles.launchDescription}>
-            Once submitted, your market will be reviewed by our team before going live.
-          </Text>
         </View>
-      </View>
+      </ScrollView>
 
       {/* Bottom Buttons */}
       <View style={styles.bottomButtons}>
@@ -197,17 +204,23 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   progressBar: {
-    height: 8,
+    height: 6,
     backgroundColor: '#1E1E2D',
-    borderRadius: 4,
+    borderRadius: 3,
   },
   progressFill: {
     height: '100%',
     backgroundColor: '#8B5CF6',
-    borderRadius: 4,
+    borderRadius: 3,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+    paddingBottom: 24,
   },
   contentSection: {
-    flex: 1,
     paddingHorizontal: 16,
   },
   reviewCard: {

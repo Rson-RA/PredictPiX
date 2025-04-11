@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   TextInput,
   Image,
+  ScrollView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import type { RootStackScreenProps } from '../navigation/types';
@@ -55,82 +56,88 @@ const CreateMarket2: React.FC<RootStackScreenProps<'CreateMarket2'>> = ({ naviga
         </View>
       </View>
 
-      {/* Content Section */}
-      <View style={styles.contentSection}>
-        <Text style={styles.sectionTitle}>Market Description</Text>
-        <Text style={styles.description}>
-          Provide context or background for the prediction to help traders make informed decisions.
-        </Text>
+      <ScrollView 
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollViewContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Content Section */}
+        <View style={styles.contentSection}>
+          <Text style={styles.sectionTitle}>Market Description</Text>
+          <Text style={styles.description}>
+            Provide context or background for the prediction to help traders make informed decisions.
+          </Text>
 
-        <Text style={styles.label}>Description</Text>
+          <Text style={styles.label}>Description</Text>
 
-        {/* Editor Toolbar */}
-        <View style={styles.toolbar}>
-          <TouchableOpacity style={styles.toolbarButton}>
-            <Text style={styles.toolbarIcon}>B</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.toolbarButton}>
-            <Text style={styles.toolbarIcon}>I</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.toolbarButton}>
-            <Icon name="list" size={20} color="#94A3B8" />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.toolbarButton}>
-            <Icon name="link" size={20} color="#94A3B8" />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.toolbarButton}>
-            <Icon name="image" size={20} color="#94A3B8" />
-          </TouchableOpacity>
-        </View>
-
-        {/* Description Input */}
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter market description"
-            placeholderTextColor="#9CA3AF"
-            value={description}
-            onChangeText={setDescription}
-            multiline
-            maxLength={1000}
-          />
-          <Text style={styles.charCount}>{description.length}/1000</Text>
-          <Text style={styles.minChars}>Min. 50 characters</Text>
-        </View>
-
-        {/* Image Upload */}
-        <View style={styles.uploadContainer}>
-          <View style={styles.uploadBox}>
-            <Icon name="cloud-upload" size={24} color="#94A3B8" />
-            <Text style={styles.uploadText}>Drag and drop or click to upload images</Text>
-            <TouchableOpacity style={styles.uploadButton}>
-              <Text style={styles.uploadButtonText}>Choose File</Text>
+          {/* Editor Toolbar */}
+          <View style={styles.toolbar}>
+            <TouchableOpacity style={styles.toolbarButton}>
+              <Text style={styles.toolbarIcon}>B</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.toolbarButton}>
+              <Text style={styles.toolbarIcon}>I</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.toolbarButton}>
+              <Icon name="list" size={20} color="#94A3B8" />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.toolbarButton}>
+              <Icon name="link" size={20} color="#94A3B8" />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.toolbarButton}>
+              <Icon name="image" size={20} color="#94A3B8" />
             </TouchableOpacity>
           </View>
-        </View>
 
-        {/* Tips Section */}
-        <View style={styles.tipsContainer}>
-          <View style={styles.tipsHeader}>
-            <Icon name="bulb" size={20} color="#8B5CF6" />
-            <Text style={styles.tipsTitle}>Tips for a great description:</Text>
+          {/* Description Input */}
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter market description"
+              placeholderTextColor="#9CA3AF"
+              value={description}
+              onChangeText={setDescription}
+              multiline
+              maxLength={1000}
+            />
+            <Text style={styles.charCount}>{description.length}/1000</Text>
+            <Text style={styles.minChars}>Min. 50 characters</Text>
           </View>
-          <View style={styles.tipsList}>
-            <View style={styles.tipItem}>
-              <Icon name="checkmark" size={16} color="#8B5CF6" />
-              <Text style={styles.tipText}>Include relevant data sources</Text>
+
+          {/* Image Upload */}
+          <View style={styles.uploadContainer}>
+            <View style={styles.uploadBox}>
+              <Icon name="cloud-upload" size={24} color="#94A3B8" />
+              <Text style={styles.uploadText}>Drag and drop or click to upload images</Text>
+              <TouchableOpacity style={styles.uploadButton}>
+                <Text style={styles.uploadButtonText}>Choose File</Text>
+              </TouchableOpacity>
             </View>
-            <View style={styles.tipItem}>
-              <Icon name="checkmark" size={16} color="#8B5CF6" />
-              <Text style={styles.tipText}>Explain market resolution criteria</Text>
+          </View>
+
+          {/* Tips Section */}
+          <View style={styles.tipsContainer}>
+            <View style={styles.tipsHeader}>
+              <Icon name="bulb" size={20} color="#8B5CF6" />
+              <Text style={styles.tipsTitle}>Tips for a great description:</Text>
             </View>
-            <View style={styles.tipItem}>
-              <Icon name="checkmark" size={16} color="#8B5CF6" />
-              <Text style={styles.tipText}>Add supporting images or links</Text>
+            <View style={styles.tipsList}>
+              <View style={styles.tipItem}>
+                <Icon name="checkmark" size={16} color="#8B5CF6" />
+                <Text style={styles.tipText}>Include relevant data sources</Text>
+              </View>
+              <View style={styles.tipItem}>
+                <Icon name="checkmark" size={16} color="#8B5CF6" />
+                <Text style={styles.tipText}>Explain market resolution criteria</Text>
+              </View>
+              <View style={styles.tipItem}>
+                <Icon name="checkmark" size={16} color="#8B5CF6" />
+                <Text style={styles.tipText}>Add supporting images or links</Text>
+              </View>
             </View>
           </View>
         </View>
-      </View>
+      </ScrollView>
 
       {/* Bottom Buttons */}
       <View style={styles.bottomButtons}>
@@ -208,17 +215,23 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   progressBar: {
-    height: 8,
+    height: 6,
     backgroundColor: '#1E1E2D',
-    borderRadius: 4,
+    borderRadius: 3,
   },
   progressFill: {
     height: '100%',
     backgroundColor: '#8B5CF6',
-    borderRadius: 4,
+    borderRadius: 3,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+    paddingBottom: 24,
   },
   contentSection: {
-    flex: 1,
     paddingHorizontal: 16,
   },
   sectionTitle: {

@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   SafeAreaView,
+  ScrollView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import type { RootStackScreenProps } from '../navigation/types';
@@ -42,101 +43,107 @@ const ChooseMarketScreen: React.FC<RootStackScreenProps<'ChooseMarket'>> = ({ na
         <Text style={styles.headerTitle}>Choose Your Market Tier</Text>
       </View>
 
-      <Text style={styles.description}>
-        Select a tier to create your market. Higher tiers earn you more from market fees and attract greater visibility.
-      </Text>
+      <ScrollView 
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollViewContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <Text style={styles.description}>
+          Select a tier to create your market. Higher tiers earn you more from market fees and attract greater visibility.
+        </Text>
 
-      {/* Market Tiers */}
-      <View style={styles.tiersContainer}>
-        {/* Basic Level */}
-        <TouchableOpacity 
-          style={[
-            styles.tierCard,
-            selectedTier === 'basic' && styles.selectedCard
-          ]} 
-          onPress={() => handleSelectTier('basic')}
-        >
-          <View style={styles.tierHeader}>
-            <Text style={styles.tierTitle}>Basic Level</Text>
-            <View style={styles.costBadge}>
-              <Text style={styles.costText}>5</Text>
-            </View>
-          </View>
-          <Text style={styles.tierDescription}>Good for quick predictions</Text>
+        {/* Market Tiers */}
+        <View style={styles.tiersContainer}>
+          {/* Basic Level */}
           <TouchableOpacity 
             style={[
-              styles.selectButton,
-              selectedTier === 'basic' && styles.selectedButton
-            ]}
+              styles.tierCard,
+              selectedTier === 'basic' && styles.selectedCard
+            ]} 
             onPress={() => handleSelectTier('basic')}
           >
-            <Text style={styles.selectButtonText}>Select Basic</Text>
-          </TouchableOpacity>
-        </TouchableOpacity>
-
-        {/* Trusted Level */}
-        <TouchableOpacity 
-          style={[
-            styles.tierCard,
-            selectedTier === 'trusted' && styles.selectedCard
-          ]} 
-          onPress={() => handleSelectTier('trusted')}
-        >
-          <View style={styles.recommendedBadge}>
-            <Text style={styles.recommendedText}>Recommended</Text>
-          </View>
-          <View style={styles.tierHeader}>
-            <Text style={styles.tierTitle}>Trusted Level</Text>
-            <View style={styles.costBadge}>
-              <Text style={styles.costText}>20</Text>
+            <View style={styles.tierHeader}>
+              <Text style={styles.tierTitle}>Basic Level</Text>
+              <View style={styles.costBadge}>
+                <Text style={styles.costText}>5</Text>
+              </View>
             </View>
-          </View>
-          <Text style={styles.tierDescription}>More credibility, more rewards</Text>
-          <View style={styles.profitShare}>
-            <Icon name="trending-up" size={16} color="#8B5CF6" />
-            <Text style={styles.profitShareText}>18% Profit Share</Text>
-          </View>
+            <Text style={styles.tierDescription}>Good for quick predictions</Text>
+            <TouchableOpacity 
+              style={[
+                styles.selectButton,
+                selectedTier === 'basic' && styles.selectedButton
+              ]}
+              onPress={() => handleSelectTier('basic')}
+            >
+              <Text style={styles.selectButtonText}>Select Basic</Text>
+            </TouchableOpacity>
+          </TouchableOpacity>
+
+          {/* Trusted Level */}
           <TouchableOpacity 
             style={[
-              styles.selectButton,
-              selectedTier === 'trusted' && styles.selectedButton
-            ]}
+              styles.tierCard,
+              selectedTier === 'trusted' && styles.selectedCard
+            ]} 
             onPress={() => handleSelectTier('trusted')}
           >
-            <Text style={styles.selectButtonText}>Select Trusted</Text>
-          </TouchableOpacity>
-        </TouchableOpacity>
-
-        {/* Partner Level */}
-        <TouchableOpacity 
-          style={[
-            styles.tierCard,
-            selectedTier === 'partner' && styles.selectedCard
-          ]} 
-          onPress={() => handleSelectTier('partner')}
-        >
-          <View style={styles.tierHeader}>
-            <Text style={styles.tierTitle}>Partner Level</Text>
-            <View style={styles.costBadge}>
-              <Text style={styles.costText}>50</Text>
+            <View style={styles.recommendedBadge}>
+              <Text style={styles.recommendedText}>Recommended</Text>
             </View>
-          </View>
-          <Text style={styles.tierDescription}>Maximum exposure and earnings</Text>
-          <View style={styles.profitShare}>
-            <Icon name="trending-up" size={16} color="#8B5CF6" />
-            <Text style={styles.profitShareText}>26.5% Profit Share</Text>
-          </View>
+            <View style={styles.tierHeader}>
+              <Text style={styles.tierTitle}>Trusted Level</Text>
+              <View style={styles.costBadge}>
+                <Text style={styles.costText}>20</Text>
+              </View>
+            </View>
+            <Text style={styles.tierDescription}>More credibility, more rewards</Text>
+            <View style={styles.profitShare}>
+              <Icon name="trending-up" size={16} color="#8B5CF6" />
+              <Text style={styles.profitShareText}>18% Profit Share</Text>
+            </View>
+            <TouchableOpacity 
+              style={[
+                styles.selectButton,
+                selectedTier === 'trusted' && styles.selectedButton
+              ]}
+              onPress={() => handleSelectTier('trusted')}
+            >
+              <Text style={styles.selectButtonText}>Select Trusted</Text>
+            </TouchableOpacity>
+          </TouchableOpacity>
+
+          {/* Partner Level */}
           <TouchableOpacity 
             style={[
-              styles.selectButton,
-              selectedTier === 'partner' && styles.selectedButton
-            ]}
+              styles.tierCard,
+              selectedTier === 'partner' && styles.selectedCard
+            ]} 
             onPress={() => handleSelectTier('partner')}
           >
-            <Text style={styles.selectButtonText}>Select Partner</Text>
+            <View style={styles.tierHeader}>
+              <Text style={styles.tierTitle}>Partner Level</Text>
+              <View style={styles.costBadge}>
+                <Text style={styles.costText}>50</Text>
+              </View>
+            </View>
+            <Text style={styles.tierDescription}>Maximum exposure and earnings</Text>
+            <View style={styles.profitShare}>
+              <Icon name="trending-up" size={16} color="#8B5CF6" />
+              <Text style={styles.profitShareText}>26.5% Profit Share</Text>
+            </View>
+            <TouchableOpacity 
+              style={[
+                styles.selectButton,
+                selectedTier === 'partner' && styles.selectedButton
+              ]}
+              onPress={() => handleSelectTier('partner')}
+            >
+              <Text style={styles.selectButtonText}>Select Partner</Text>
+            </TouchableOpacity>
           </TouchableOpacity>
-        </TouchableOpacity>
-      </View>
+        </View>
+      </ScrollView>
 
       {/* Bottom Buttons */}
       <View style={styles.bottomButtons}>
@@ -166,6 +173,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#111827',
   },
+  scrollView: {
+    flex: 1,
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+    paddingBottom: 16,
+  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -187,7 +201,6 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   tiersContainer: {
-    flex: 1,
     paddingHorizontal: 16,
   },
   tierCard: {
@@ -277,6 +290,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 16,
     gap: 12,
+    backgroundColor: '#111827',
   },
   cancelButton: {
     flex: 1,
