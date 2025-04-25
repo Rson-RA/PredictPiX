@@ -1,44 +1,5 @@
 import api from './config';
-
-interface UserBase {
-  id: number;
-  username: string;
-  firstname: string;
-  lastname: string;
-  avatar_url: string | null;
-}
-
-export interface Trader extends UserBase {
-  total_profit: number;
-  total_predictions: number;
-  win_rate: number;
-  rank?: number;
-  balance: number;
-}
-
-export interface Profile extends UserBase {
-  email: string;
-  phone_number: string;
-  role: string;
-  balance: number;
-  referral_code: string;
-  total_referrals: number;
-  total_earnings_from_referrals: number;
-  total_profit: number;
-  predictions: number;
-  win_rate: number;
-  rank: number;
-  created_at: string;
-  updated_at: string;
-}
-
-interface TraderResponse {
-  items: Trader[];
-  total: number;
-  page: number;
-  limit: number;
-  total_pages: number;
-}
+import { User, Trader, Profile } from '@/types/models';
 
 const usersApi = {
   getTopTraders: async (period: 'day' | 'week' | 'month' | 'all' = 'week', limit: number = 10): Promise<Trader[]> => {
@@ -77,13 +38,30 @@ const usersApi = {
     return response.data;
   },
 
-  updateUser: async (id: number, data: Partial<UserBase>): Promise<Profile> => {
-    const response = await api.put(`/users/${id}`, data);
+  updateUser: async (id: number, data: Partial<User>): Promise<Profile> => {
+    const response = await api.patch<Profile>(`/users/${id}`, data);
     return response.data;
   },
 
   getPortfolio: async (id: number): Promise<Trader> => {
     const response = await api.get(`/users/${id}/portfolio`);
+    return response.data;
+  },
+
+  updateUserAvatar : async (id: number, file: File): Promise<User> => {
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    const response = await api.post<User>(`/users/${id}/avatar`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+    return response.data;
+  },
+  
+  deleteUserAvatar : async (id: number): Promise<User> => {
+    const response = await api.delete<User>(`/users/${id}/avatar`);
     return response.data;
   },
 };

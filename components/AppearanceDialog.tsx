@@ -1,19 +1,19 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Modal, ViewStyle, TextStyle } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Modal } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { useTheme } from '@/context/ThemeContext';
 
 interface AppearanceDialogProps {
   visible: boolean;
   onClose: () => void;
-  onApply: (theme: 'dark' | 'light') => void;
-  currentTheme: 'dark' | 'light';
 }
 
-export default function AppearanceDialog({ visible, onClose, onApply, currentTheme }: AppearanceDialogProps): React.JSX.Element {
-  const [selectedTheme, setSelectedTheme] = React.useState<'dark' | 'light'>(currentTheme);
+export default function AppearanceDialog({ visible, onClose }: AppearanceDialogProps): React.JSX.Element {
+  const { theme, setTheme } = useTheme();
+  const [selectedTheme, setSelectedTheme] = React.useState<'dark' | 'light'>(theme);
 
-  const handleApply = () => {
-    onApply(selectedTheme);
+  const handleApply = async () => {
+    await setTheme(selectedTheme);
     onClose();
   };
 

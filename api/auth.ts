@@ -1,4 +1,5 @@
 import api from './config';
+import { User } from '@/types/models';
 
 export interface LoginCredentials {
   email: string;
@@ -12,21 +13,9 @@ export interface RegisterCredentials extends LoginCredentials {
   phone_number?: string;
 }
 
-export interface AuthResponse {
+export interface AuthResponse extends User {
   access_token: string;
   token_type: string;
-  user_id: number;
-  username: string;
-  first_name: string | null;
-  last_name: string | null;
-  email: string | null;
-  phone_number: string | null;
-  role: string;
-  total_profit: number;
-  balance: number;
-  created_at: string | null;
-  updated_at: string | null;
-  avatar_url: string | null;
 }
 
 const authApi = {

@@ -7,6 +7,7 @@ import LogoutConfirmDialog from '@/components/LogoutConfirmDialog';
 import NotificationsDialog from '@/components/NotificationsDialog';
 import AppearanceDialog from '@/components/AppearanceDialog';
 import { useAuth } from '@/context/AuthContext';
+import { getFullAvatarUrl } from '@/utils';
 
 const settingsOptions = [
   {
@@ -53,12 +54,6 @@ const settingsOptions = [
   }
 ];
 
-const userProfile = {
-  name: 'Alex Thompson',
-  username: '@alex_t',
-  avatar: 'https://example.com/avatar.jpg'
-};
-
 interface StylesType {
   container: ViewStyle;
   headerTitle: TextStyle;
@@ -78,7 +73,7 @@ export default function SettingsScreen(): React.JSX.Element {
   const [showNotifications, setShowNotifications] = React.useState(false);
   const [showAppearance, setShowAppearance] = React.useState(false);
   const [currentTheme, setCurrentTheme] = React.useState<'dark' | 'light'>('dark');
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
 
   const handleLogout = async () => {
     // Implement logout logic here
@@ -136,10 +131,10 @@ export default function SettingsScreen(): React.JSX.Element {
 
       {/* User Profile Summary */}
       <View style={styles.profileSummary}>
-        <Image source={{ uri: userProfile.avatar }} style={styles.avatar} />
+        <Image source={{ uri: getFullAvatarUrl(user?.avatar_url) }} style={styles.avatar} />
         <View style={styles.profileInfo}>
-          <Text style={styles.name}>{userProfile.name}</Text>
-          <Text style={styles.username}>{userProfile.username}</Text>
+          <Text style={styles.name}>{user?.first_name} {user?.last_name}</Text>
+          <Text style={styles.username}>{user?.username}</Text>
         </View>
       </View>
 

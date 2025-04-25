@@ -4,6 +4,7 @@ import authApi, { AuthResponse, LoginCredentials, RegisterCredentials } from '@/
 
 interface AuthContextType {
   user: AuthResponse | null;
+  setUser: (user: AuthResponse | null) => void;
   token: string | null;
   isLoading: boolean;
   login: (credentials: LoginCredentials) => Promise<void>;
@@ -114,6 +115,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         user,
         token,
         isLoading,
+        setUser,
         login,
         register,
         logout,

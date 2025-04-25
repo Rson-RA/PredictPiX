@@ -1,20 +1,44 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image, Alert } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import usersApi from '@/api/users';
+import { useAuth } from '@/context/AuthContext';
+import { getFullAvatarUrl } from '@/utils';
 
 export default function ProfileEditScreen() {
   const router = useRouter();
-  const [displayName, setDisplayName] = useState('Alex Thompson');
-  const [email, setEmail] = useState('alex@example.com');
+  const { user, setUser } = useAuth();
+  const [displayName, setDisplayName] = useState('');
+  const [email, setEmail] = useState('');
+
+  useEffect(() => {
+    setDisplayName(user?.username || "");
+    setEmail(user?.email || "");
+  }, [user]);
 
   const handleBack = () => {
     router.back();
   };
 
-  const handleSave = () => {
-    // Implement save logic here
-    router.back();
+  const handleSave = async () => {
+    if (!displayName || !email) {
+      Alert.alert('Please fill in all fields');
+      return;
+    }
+    if (user?.id) {
+      await usersApi.updateUser(user.id, {
+        username: displayName,
+        email: email,
+      });
+      setUser({
+        ...user,
+        username: displayName,
+        email: email,
+      });
+      Alert.alert('Profile updated successfully');
+      router.back();
+    }
   };
 
   return (
@@ -39,7 +63,7 @@ export default function ProfileEditScreen() {
       <View style={styles.avatarSection}>
         <View style={styles.avatarContainer}>
           <Image
-            source={{ uri: 'https://example.com/avatar.jpg' }}
+            source={{ uri: getFullAvatarUrl(user?.avatar_url) }}
             style={styles.avatar}
           />
           <View style={styles.verifiedBadge}>

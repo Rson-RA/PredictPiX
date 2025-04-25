@@ -5,9 +5,10 @@ import { router, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import LogoutConfirmDialog from '@/components/LogoutConfirmDialog';
 import { useAuth } from '@/context/AuthContext';
-import usersApi, { Profile } from '@/api/users';
+import usersApi from '@/api/users';
 import { getFullAvatarUrl } from '@/utils';
 import Toast from 'react-native-toast-message';
+import { Profile } from '@/types/models';
 
 const connectedAccounts = [
   {
@@ -43,7 +44,7 @@ export default function ProfileScreen() {
 
   const fetchProfile = async () => {
     if (user) {
-      const profile = await usersApi.getProfile(user.user_id);
+      const profile = await usersApi.getProfile(user.id);
       setProfile(profile);
     }
   }
