@@ -47,7 +47,7 @@ export default function LeaderboardScreen() {
         <View style={[styles.topThreeItem, styles.secondPlace]}>
           <View style={styles.avatarContainer}>
             <Image source={{uri: getFullAvatarUrl(second?.avatar_url)}} style={styles.avatar} />
-            <View style={styles.rankBadge}>
+            <View style={[styles.rankBadge, styles.secondPlaceBadge]}>
               <Text style={styles.rankText}>2</Text>
             </View>
           </View>
@@ -71,7 +71,7 @@ export default function LeaderboardScreen() {
         <View style={[styles.topThreeItem, styles.thirdPlace]}>
           <View style={styles.avatarContainer}>
             <Image source={{ uri: getFullAvatarUrl(third?.avatar_url)}} style={styles.avatar} />
-            <View style={styles.rankBadge}>
+            <View style={[styles.rankBadge, styles.thirdPlaceBadge]}>
               <Text style={styles.rankText}>3</Text>
             </View>
           </View>
@@ -246,15 +246,21 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: '#374151',
+    backgroundColor: '#9CA3AF',
     justifyContent: 'center',
     alignItems: 'center',
   },
   firstPlaceBadge: {
     backgroundColor: '#FFD700',
   },
+  secondPlaceBadge: {
+    backgroundColor: '#9CA3AF',
+  },
+  thirdPlaceBadge: {
+    backgroundColor: '#CD7F32',
+  },
   rankText: {
-    color: '#FFFFFF',
+    color: '#111827',
     fontSize: 12,
     fontWeight: '600',
   },

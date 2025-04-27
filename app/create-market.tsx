@@ -3,11 +3,13 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-nati
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { Stack } from 'expo-router';
+import { useMarketCreation } from '@/context/MarketCreationContext';
 
 export type TierType = 'basic' | 'trusted' | 'partner';
 
 export default function CreateMarketScreen() {
   const router = useRouter();
+  const { updateMarketData } = useMarketCreation();
   const [selectedTier, setSelectedTier] = useState<TierType | null>(null);
 
   const handleBack = () => {
@@ -16,6 +18,7 @@ export default function CreateMarketScreen() {
 
   const handleContinue = () => {
     if (selectedTier) {
+      updateMarketData({ tier: selectedTier });
       router.push('/market-title');
     }
   };
@@ -72,7 +75,7 @@ export default function CreateMarketScreen() {
             <Text style={styles.tierDescription}>Maximum exposure and earnings</Text>
             <View style={styles.profitShareContainer}>
               <FontAwesome5 name="chart-line" size={14} color="#8B5CF6" />
-              <Text style={styles.profitShareText}>18% Profit Share</Text>
+              <Text style={styles.profitShareText}>18% Creator Reward Share</Text>
             </View>
             <TouchableOpacity 
               style={styles.selectButton}
@@ -96,7 +99,7 @@ export default function CreateMarketScreen() {
             <Text style={styles.tierDescription}>Maximum exposure and earnings</Text>
             <View style={styles.profitShareContainer}>
               <FontAwesome5 name="chart-line" size={14} color="#8B5CF6" />
-              <Text style={styles.profitShareText}>26.5% Profit Share</Text>
+              <Text style={styles.profitShareText}>26.5% Creator Reward Share</Text>
             </View>
             <TouchableOpacity 
               style={styles.selectButton}

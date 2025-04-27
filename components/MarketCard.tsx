@@ -1,87 +1,53 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import BuyPosition from './BuyPosition';
+import { renderTimeRemaining } from '../utils';
+import { Market } from '../types/models';
 
 interface MarketCardProps {
-  title: string;
-  timeLeft: string;
-  percentage: string;
-  volume: string;
-  onBuyYes: (amount: number) => void;
-  onBuyNo: (amount: number) => void;
+  market: Market;
+  onBuyYes: (market: Market) => void;
+  onBuyNo: (market: Market) => void;
 }
 
 export default function MarketCard({
-  title,
-  timeLeft,
-  percentage,
-  volume,
+  market,
   onBuyYes,
   onBuyNo,
 }: MarketCardProps) {
-  const [showBuyDialog, setShowBuyDialog] = useState(false);
-  const [isYesPosition, setIsYesPosition] = useState(true);
-
-  const handleBuyYes = () => {
-    setIsYesPosition(true);
-    setShowBuyDialog(true);
-  };
-
-  const handleBuyNo = () => {
-    setIsYesPosition(false);
-    setShowBuyDialog(true);
-  };
-
-  const handleConfirm = (amount: number) => {
-    if (isYesPosition) {
-      onBuyYes(amount);
-    } else {
-      onBuyNo(amount);
-    }
-    setShowBuyDialog(false);
-  };
 
   return (
     <View style={styles.marketCard}>
       <View style={styles.marketHeader}>
-        <Text style={styles.marketTitle}>{title}</Text>
+        <Text style={styles.marketTitle}>{market.title}</Text>
         <View style={styles.timeContainer}>
-          <Text style={styles.timeText}>{timeLeft}</Text>
-          <Text style={styles.timeLabel}>left</Text>
+          <Text style={styles.timeText}>{renderTimeRemaining(market.end_time)}</Text>
+          <Text style={styles.timeLabel}></Text>
         </View>
       </View>
 
       <View style={styles.marketInfo}>
         <View style={styles.predictionInfo}>
-          <Text style={styles.percentage}>{percentage}</Text>
+          <Text style={styles.percentage}>{market.yes_pool / market.total_pool} %</Text>
           <Text style={styles.predictionText}>Yes</Text>
         </View>
-        <Text style={styles.volume}>{volume}</Text>
+        <Text style={styles.volume}>{market.total_pool}</Text>
       </View>
 
       <View style={styles.actionButtons}>
         <TouchableOpacity 
           style={[styles.actionButton, styles.buyYesButton]} 
-          onPress={handleBuyYes}
+          onPress={() => onBuyYes(market)}
         >
           <Text style={styles.buttonText}>Buy Yes</Text>
         </TouchableOpacity>
         <TouchableOpacity 
           style={[styles.actionButton, styles.buyNoButton]} 
-          onPress={handleBuyNo}
+          onPress={() => onBuyNo(market)}
         >
           <Text style={styles.buttonText}>Buy No</Text>
         </TouchableOpacity>
       </View>
-
-      <BuyPosition
-        visible={showBuyDialog}
-        onClose={() => setShowBuyDialog(false)}
-        onConfirm={handleConfirm}
-        currentProbability={percentage}
-        isYesPosition={isYesPosition}
-        marketQuestion={title}
-      />
     </View>
   );
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { Market } from '@/types/models';
 import { Colors } from '@/constants/Colors';
 import { formatDistanceToNow } from 'date-fns';
@@ -40,10 +40,10 @@ const FeaturedMarketItem: React.FC<FeaturedMarketItemProps> = ({ market }) => {
             <MaterialIcons name="trending-up" size={16} color="#10B981" />
             <Text style={[styles.predictionText, { color: '#10B981' }]}>{yesPercentage}% Yes</Text>
           </View>
-          <Text style={[styles.marketValue, { color: isDark ? '#9CA3AF' : '#6B7280' }]}>${market.total_pool.toLocaleString()}</Text>
+          <Text style={[styles.marketValue, { color: isDark ? '#9CA3AF' : '#6B7280' }]}>π {market.total_pool.toLocaleString()}</Text>
         </View>
       </View>
-      <TouchableOpacity style={styles.viewMarketButton}>
+      <TouchableOpacity style={styles.viewMarketButton} onPress={() => router.push(`/market/${market.id}`)}>
         <Text style={styles.viewMarketText}>View Market</Text>
       </TouchableOpacity>
     </TouchableOpacity>

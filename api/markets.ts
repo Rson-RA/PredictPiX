@@ -1,5 +1,5 @@
 import api from './config';
-import { Market } from '@/types/models';
+import { Market, MarketCreate } from '@/types/models';
 
 interface MarketFilters {
   category?: string;
@@ -18,7 +18,7 @@ interface MarketResponse {
 }
 
 const marketsApi = {
-  getMarkets: async (filters: MarketFilters = {}): Promise<MarketResponse> => {
+  getMarkets: async (filters: MarketFilters = {}): Promise<Market[]> => {
     const response = await api.get('/markets', {
       params: filters,
     });
@@ -48,6 +48,11 @@ const marketsApi = {
     const response = await api.get(`/markets/category/${category}`, {
       params: filters,
     });
+    return response.data;
+  },
+
+  createMarket: async (marketData: MarketCreate) => {
+    const response = await api.post('/markets/create', marketData);
     return response.data;
   },
 };

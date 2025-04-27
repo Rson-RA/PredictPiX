@@ -1,10 +1,13 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import { useRouter } from 'expo-router';
+import React, { useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { Stack, useRouter } from 'expo-router';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { useMarketCreation } from '@/context/MarketCreationContext';
+import marketsApi from '@/api/markets';
 
 export default function MarketReviewScreen() {
   const router = useRouter();
+  const { marketData } = useMarketCreation();
 
   const handleBack = () => {
     router.back();
@@ -12,96 +15,109 @@ export default function MarketReviewScreen() {
 
   const handleSubmit = () => {
     // Navigate to submitted screen
-    router.push('/market-submitted');
+    marketsApi.createMarket(marketData).then((response) => {
+      console.log(response);
+      router.push('/market-submitted');
+    }).catch((error) => {
+      Alert.alert('Error', error.message);
+      console.log(error);
+    });
   };
 
   return (
-    <View style={styles.container}>
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        {/* Progress Section */}
-        <View style={styles.progressContainer}>
-          <View style={styles.stepContainer}>
-            <Text style={styles.stepText}>
-              <Text style={styles.purpleText}>Step 4 of 4</Text> • Final Review
+      <>
+        <Stack.Screen 
+          options={{
+            title: "Review Market",
+            headerShown: true,
+          }} 
+        />
+        <View style={styles.container}>
+          <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+            {/* Progress Section */}
+          <View style={styles.progressContainer}>
+            <View style={styles.stepContainer}>
+              <Text style={styles.purpleText}>Step 4 of 4</Text>
+              <Text style={styles.stepTitle}>Final Review</Text>
+            </View>
+            <View style={styles.progressBarContainer}>
+              <View style={styles.progressBarBackground}>
+                <View style={[styles.progressBarFill, { width: '100%' }]} />
+              </View>
+            </View>
+          </View>
+
+          {/* Review Sections */}
+          <View style={styles.reviewSection}>
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionTitle}>Market Title</Text>
+              <TouchableOpacity style={styles.editButton} onPress={() => router.push('/market-title')}>
+                <FontAwesome5 name="pen" size={14} color="#8B5CF6" />
+                <Text style={styles.editText}>Edit</Text>
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.contentText}>{marketData.title}</Text>
+          </View>
+
+          <View style={styles.reviewSection}>
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionTitle}>Description</Text>
+              <TouchableOpacity style={styles.editButton} onPress={() => router.push('/market-description')}>
+                <FontAwesome5 name="pen" size={14} color="#8B5CF6" />
+                <Text style={styles.editText}>Edit</Text>
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.contentText}>
+              {marketData.description}
             </Text>
-            <TouchableOpacity>
-              <FontAwesome5 name="question-circle" size={16} color="#9CA3AF" />
-            </TouchableOpacity>
           </View>
-          <View style={styles.progressBarContainer}>
-            <View style={styles.progressBarBackground}>
-              <View style={[styles.progressBarFill, { width: '100%' }]} />
+
+          <View style={styles.reviewSection}>
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionTitle}>Outcomes</Text>
+              <TouchableOpacity style={styles.editButton} onPress={() => router.push('/market-outcomes')}>
+                <FontAwesome5 name="pen" size={14} color="#8B5CF6" />
+                <Text style={styles.editText}>Edit</Text>
+              </TouchableOpacity>
             </View>
-          </View>
-        </View>
-
-        {/* Review Sections */}
-        <View style={styles.reviewSection}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Market Title</Text>
-            <TouchableOpacity style={styles.editButton}>
-              <FontAwesome5 name="pen" size={14} color="#8B5CF6" />
-              <Text style={styles.editText}>Edit</Text>
-            </TouchableOpacity>
-          </View>
-          <Text style={styles.contentText}>Will Bitcoin reach $100k by end of 2025?</Text>
-        </View>
-
-        <View style={styles.reviewSection}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Description</Text>
-            <TouchableOpacity style={styles.editButton}>
-              <FontAwesome5 name="pen" size={14} color="#8B5CF6" />
-              <Text style={styles.editText}>Edit</Text>
-            </TouchableOpacity>
-          </View>
-          <Text style={styles.contentText}>
-            This market will resolve to YES if Bitcoin reaches or exceeds $100,000 USD on any major cryptocurrency exchange before December 31st, 2025.
-          </Text>
-        </View>
-
-        <View style={styles.reviewSection}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Outcomes</Text>
-            <TouchableOpacity style={styles.editButton}>
-              <FontAwesome5 name="pen" size={14} color="#8B5CF6" />
-              <Text style={styles.editText}>Edit</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.outcomeItem}>
-            <View style={styles.yesTag}>
-              <Text style={styles.tagText}>Yes</Text>
+            <View style={styles.outcomeItem}>
+              <View style={styles.yesTag}>
+                <Text style={styles.tagText}>Yes</Text>
+              </View>
+              <Text style={styles.contentText}>{marketData.metadata.yesDescription}</Text>
             </View>
-          </View>
-          <View style={styles.outcomeItem}>
-            <View style={styles.noTag}>
-              <Text style={styles.tagText}>No</Text>
+            <View style={styles.outcomeItem}>
+              <View style={styles.noTag}>
+                <Text style={styles.tagText}>No</Text>
+              </View>
+              <Text style={styles.contentText}>{marketData.metadata.noDescription}</Text>
             </View>
+            <Text style={styles.sourceText}>{marketData.metadata.source}</Text>
           </View>
-        </View>
 
-        {/* Ready to Launch Card */}
-        <View style={styles.launchCard}>
-          <View style={styles.launchIconContainer}>
-            <FontAwesome5 name="rocket" size={20} color="#8B5CF6" />
+          {/* Ready to Launch Card */}
+          <View style={styles.launchCard}>
+            <View style={styles.launchIconContainer}>
+              <FontAwesome5 name="rocket" size={20} color="#8B5CF6" />
+            </View>
+            <Text style={styles.launchTitle}>Ready to Launch?</Text>
+            <Text style={styles.launchDescription}>
+              Once submitted, your market will be reviewed by our team before going live.
+            </Text>
           </View>
-          <Text style={styles.launchTitle}>Ready to Launch?</Text>
-          <Text style={styles.launchDescription}>
-            Once submitted, your market will be reviewed by our team before going live.
-          </Text>
-        </View>
 
-        {/* Bottom Buttons */}
-        <View style={styles.bottomButtons}>
-          <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-            <Text style={styles.backButtonText}>Back</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-            <Text style={styles.submitButtonText}>Submit Market</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-    </View>
+          {/* Bottom Buttons */}
+          <View style={styles.bottomButtons}>
+            <TouchableOpacity style={styles.backButton} onPress={handleBack}>
+              <Text style={styles.backButtonText}>Back</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+              <Text style={styles.submitButtonText}>Submit Market</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </View>
+    </>
   );
 }
 
@@ -124,11 +140,17 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   stepText: {
-    fontSize: 14,
-    color: '#FFFFFF',
+    display: 'flex',
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'space-between',
+    gap: 4,
   },
   purpleText: {
     color: '#8B5CF6',
+  },
+  stepTitle: {
+    color: '#FFFFFF',
   },
   progressBarContainer: {
     width: '100%',
@@ -176,6 +198,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#9CA3AF',
     lineHeight: 20,
+  },
+  sourceText: {
+    fontSize: 14,
+    color: '#5C535F',
+    lineHeight: 20,
+    backgroundColor: '#1F2937',
+    borderRadius: 12,
+    marginTop: 8,
   },
   outcomeItem: {
     marginTop: 8,

@@ -1,16 +1,29 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Alert } from 'react-native';
 import { Stack, router } from 'expo-router';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { useMarketCreation } from '@/context/MarketCreationContext';
 
 export default function MarketTitleScreen() {
   const [title, setTitle] = useState('');
+  const { updateMarketData, marketData } = useMarketCreation();
+
+  useEffect(() => {
+    if (marketData?.title) {
+      setTitle(marketData.title);
+    }
+  }, []);
 
   const handleBack = () => {
     router.back();
   };
 
   const handleContinue = () => {
+    if (title.length < 10 || title.length > 100) {
+      Alert.alert('Invalid Title', 'Title must be between 10 and 100 characters');
+      return;
+    }
+    updateMarketData({ title });
     // Navigate to the market description screen
     router.push('/market-description');
   };
@@ -21,7 +34,7 @@ export default function MarketTitleScreen() {
     <>
       <Stack.Screen 
         options={{
-          title: "Choose Your Market Tier",
+          title: "Create Market",
           headerShown: true,
         }} 
       />

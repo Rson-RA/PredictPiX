@@ -91,7 +91,7 @@ export default function ProfileScreen() {
           </View>
           <View style={styles.statDivider} />
           <View style={styles.statItem}>
-            <Text style={styles.statValue}>${profile?.total_profit || 0}</Text>
+            <Text style={styles.statValue}>π{profile?.total_profit || 0}</Text>
             <Text style={styles.statLabel}>Earnings</Text>
           </View>
         </View>
@@ -144,9 +144,9 @@ export default function ProfileScreen() {
             <Text style={styles.referralLabel}>Total Referrals</Text>
             <Text style={styles.referralValue}>{profile?.total_referrals || 0}</Text>
           </View>
-          <View style={styles.referralStatItem}>
+          <View style={styles.referralEarnings}>
             <Text style={styles.referralLabel}>Earned</Text>
-            <Text style={styles.referralValue}>${profile?.total_earnings_from_referrals || 0}</Text>
+            <Text style={styles.referralValue}>π {profile?.total_earnings_from_referrals || 0}</Text>
           </View>
         </View>
       </View>
@@ -275,19 +275,17 @@ const styles = StyleSheet.create({
   connectButton: {
     paddingHorizontal: 16,
     paddingVertical: 8,
-    borderRadius: 20,
-    backgroundColor: '#8B5CF6',
+    borderRadius: 20
   },
   connectedButton: {
-    backgroundColor: '#374151',
   },
   connectButtonText: {
-    color: '#FFFFFF',
+    color: '#8B5CF6',
     fontSize: 14,
     fontWeight: '500',
   },
   connectedButtonText: {
-    color: '#9CA3AF',
+    color: '#10B981',
   },
   referralCodeContainer: {
     flexDirection: 'row',
@@ -310,6 +308,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   referralStatItem: {
+    flex: 1,
+  },
+  referralEarnings: {
+    alignItems: 'flex-end',
     flex: 1,
   },
   referralLabel: {

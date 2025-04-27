@@ -24,50 +24,31 @@ interface CreatePredictionData {
 }
 
 const predictionsApi = {
-  getPredictions: async (filters: PredictionFilters = {}, token: string): Promise<PredictionResponse> => {
-    const response = await api.get('/predictions', {
-      params: filters,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+  getPredictions: async (filters: PredictionFilters = {} ): Promise<PredictionResponse> => {
+    const response = await api.get('/predictions');
     return response.data;
   },
 
-  getPredictionById: async (id: number, token: string): Promise<Prediction> => {
-    const response = await api.get(`/predictions/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+  getPredictionById: async (id: number ): Promise<Prediction> => {
+    const response = await api.get(`/predictions/${id}`);
     return response.data;
   },
 
-  createPrediction: async (data: CreatePredictionData, token: string): Promise<Prediction> => {
-    const response = await api.post('/predictions', data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+  createPrediction: async (data: CreatePredictionData ): Promise<Prediction> => {
+    const response = await api.post('/predictions/create', data);
     return response.data;
   },
 
-  getUserPredictions: async (userId: number, filters: Omit<PredictionFilters, 'user_id'>, token: string): Promise<PredictionResponse> => {
+  getUserPredictions: async (userId: number, filters: Omit<PredictionFilters, 'user_id'> ): Promise<PredictionResponse> => {
     const response = await api.get(`/users/${userId}/predictions`, {
-      params: filters,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      params: filters
     });
     return response.data;
   },
 
-  getMarketPredictions: async (marketId: number, filters: Omit<PredictionFilters, 'market_id'>, token: string): Promise<PredictionResponse> => {
+  getMarketPredictions: async (marketId: number, filters: Omit<PredictionFilters, 'market_id'> ): Promise<PredictionResponse> => {
     const response = await api.get(`/markets/${marketId}/predictions`, {
       params: filters,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
     });
     return response.data;
   },

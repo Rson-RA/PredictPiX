@@ -1,44 +1,38 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal } from 'react-native';
 import { useRouter } from 'expo-router';
+import { Market } from '../types/models';
 
 interface ConfirmPositionProps {
   visible: boolean;
   onClose: () => void;
   onConfirm: () => void;
-  marketQuestion: string;
   position: string;
   stake: number;
   potentialReturn: number;
   transactionFee: number;
   totalCost: number;
+  market: Market;
+  isYesPosition: boolean;
 }
 
 export default function ConfirmPosition({
   visible,
   onClose,
   onConfirm,
-  marketQuestion,
   position,
   stake,
   potentialReturn,
   transactionFee,
   totalCost,
+  market,
+  isYesPosition,
 }: ConfirmPositionProps) {
-  const router = useRouter();
-
+  
+  const currentProbability = ((market?.yes_pool || 0) / (market?.total_pool || 0)) * 100;
+ 
   const handleConfirm = () => {
     onConfirm();
-    router.push({
-      pathname: '/purchase-status',
-      params: {
-        market: marketQuestion,
-        position: position,
-        stakeAmount: stake?.toFixed(2),
-        transactionFee: transactionFee?.toFixed(2),
-        potentialProfit: potentialReturn?.toFixed(2),
-      }
-    });
   };
 
   return (
@@ -61,18 +55,18 @@ export default function ConfirmPosition({
           {/* Market Question */}
           <View style={styles.section}>
             <Text style={styles.label}>Market Question</Text>
-            <Text style={styles.marketQuestion}>{marketQuestion}</Text>
+            <Text style={styles.marketQuestion}>{market.title}</Text>
           </View>
 
           {/* Position and Stake */}
           <View style={styles.row}>
             <View style={styles.column}>
               <Text style={styles.label}>Position</Text>
-              <Text style={styles.value}>{position}</Text>
+              <Text style={styles.value}>{isYesPosition ? 'YES' : 'NO'} {currentProbability.toFixed(2)}%</Text>
             </View>
             <View style={styles.column}>
               <Text style={styles.label}>Stake</Text>
-              <Text style={styles.value}>${stake.toFixed(2)}</Text>
+              <Text style={styles.value}>π{stake.toFixed(2)}</Text>
             </View>
           </View>
 
@@ -80,15 +74,15 @@ export default function ConfirmPosition({
           <View style={styles.transactionDetails}>
             <View style={styles.detailRow}>
               <Text style={styles.detailLabel}>Potential Return</Text>
-              <Text style={styles.potentialReturn}>+${potentialReturn?.toFixed(2)}</Text>
+              <Text style={styles.potentialReturn}>+π{potentialReturn?.toFixed(2)}</Text>
             </View>
             <View style={styles.detailRow}>
               <Text style={styles.detailLabel}>Transaction Fee</Text>
-              <Text style={styles.detailValue}>${transactionFee?.toFixed(2)}</Text>
+              <Text style={styles.detailValue}>π{transactionFee?.toFixed(2)}</Text>
             </View>
             <View style={styles.detailRow}>
               <Text style={styles.detailLabel}>Total Cost</Text>
-              <Text style={styles.detailValue}>${totalCost?.toFixed(2)}</Text>
+              <Text style={styles.detailValue}>π{totalCost?.toFixed(2)}</Text>
             </View>
           </View>
 

@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, Stack } from 'expo-router';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { useMarketCreation } from '@/context/MarketCreationContext';
 
 export default function MarketOutcomesScreen() {
   const router = useRouter();
@@ -10,121 +11,157 @@ export default function MarketOutcomesScreen() {
   const [noOutcome, setNoOutcome] = useState('No');
   const [noDescription, setNoDescription] = useState('');
   const [resolutionSource, setResolutionSource] = useState('');
+  const { updateMarketData, marketData } = useMarketCreation();
+
+  useEffect(() => {
+    if (marketData?.metadata?.yes) {
+      setYesOutcome(marketData.metadata.yes);
+    }
+    if (marketData?.metadata?.yesDescription) {
+      setYesDescription(marketData.metadata.yesDescription); 
+    }
+    if (marketData?.metadata?.no) {
+      setNoOutcome(marketData.metadata.no);
+    }
+    if (marketData?.metadata?.noDescription) {
+      setNoDescription(marketData.metadata.noDescription);
+    }
+    if (marketData?.metadata?.source) {
+      setResolutionSource(marketData.metadata.source);
+    }
+  }, []);
+
 
   const handleBack = () => {
     router.back();
   };
 
   const handleContinue = () => {
-    // Navigate to review screen
+    const now = new Date();
+    updateMarketData({ 
+      metadata: 
+      { yes: yesOutcome, yesDescription, no: noOutcome, noDescription, source: resolutionSource },
+      end_time: new Date(now.getTime() + 1000 * 60 * 60 * 24 * 5).toISOString(), 
+      resolution_time: new Date(now.getTime() + 1000 * 60 * 60 * 24 * 7).toISOString(),
+      creator_fee_percentage: 1,
+      platform_fee_percentage: 2,
+    });
     router.push('/market-review');
   };
 
   return (
-    <View style={styles.container}>
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        {/* Progress Section */}
-        <View style={styles.progressContainer}>
-          <View style={styles.stepContainer}>
-            <Text style={styles.stepText}>
-              <Text style={styles.purpleText}>Step 3 of 4</Text> • Market Creation
+    <>
+      <Stack.Screen 
+        options={{
+          title: "Create Market",
+          headerShown: true,
+        }} 
+      />
+      <View style={styles.container}>
+        <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+          {/* Progress Section */}
+          <View style={styles.progressContainer}>
+            <View style={styles.stepContainer}>
+              <Text style={styles.stepText}>
+                <Text style={styles.purpleText}>Step 3 of 4</Text> • Market Creation
+              </Text>
+              <TouchableOpacity>
+                <FontAwesome5 name="question-circle" size={16} color="#9CA3AF" />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.progressBarContainer}>
+              <View style={styles.progressBarBackground}>
+                <View style={[styles.progressBarFill, { width: '75%' }]} />
+              </View>
+            </View>
+          </View>
+
+          {/* Title Section */}
+          <Text style={styles.heading}>Market Outcomes</Text>
+          <Text style={styles.description}>
+            Define the possible outcomes for your prediction market.
+          </Text>
+
+          {/* Yes Outcome Section */}
+          <View style={styles.outcomeContainer}>
+            <View style={styles.outcomeHeader}>
+              <Text style={styles.outcomeTitle}>Yes Outcome</Text>
+              <View style={styles.yesTag}>
+                <Text style={styles.tagText}>Yes</Text>
+              </View>
+            </View>
+            <TextInput
+              style={styles.outcomeInput}
+              value={yesOutcome}
+              onChangeText={setYesOutcome}
+              placeholder="Yes"
+              placeholderTextColor="#71717A"
+            />
+            <TextInput
+              style={styles.descriptionInput}
+              value={yesDescription}
+              onChangeText={setYesDescription}
+              placeholder="Add description (optional)"
+              placeholderTextColor="#71717A"
+              multiline
+            />
+          </View>
+
+          {/* No Outcome Section */}
+          <View style={styles.outcomeContainer}>
+            <View style={styles.outcomeHeader}>
+              <Text style={styles.outcomeTitle}>No Outcome</Text>
+              <View style={styles.noTag}>
+                <Text style={styles.tagText}>No</Text>
+              </View>
+            </View>
+            <TextInput
+              style={styles.outcomeInput}
+              value={noOutcome}
+              onChangeText={setNoOutcome}
+              placeholder="No"
+              placeholderTextColor="#71717A"
+            />
+            <TextInput
+              style={styles.descriptionInput}
+              value={noDescription}
+              onChangeText={setNoDescription}
+              placeholder="Add description (optional)"
+              placeholderTextColor="#71717A"
+              multiline
+            />
+          </View>
+
+          {/* Resolution Source Section */}
+          <View style={styles.resolutionContainer}>
+            <View style={styles.resolutionHeader}>
+              <Text style={styles.resolutionTitle}>Resolution Source</Text>
+              <FontAwesome5 name="info-circle" size={16} color="#9CA3AF" />
+            </View>
+            <Text style={styles.resolutionDescription}>
+              Specify where the outcome will be verified
             </Text>
-            <TouchableOpacity>
-              <FontAwesome5 name="question-circle" size={16} color="#9CA3AF" />
+            <TextInput
+              style={styles.resolutionInput}
+              value={resolutionSource}
+              onChangeText={setResolutionSource}
+              placeholder="Enter URL or description of resolution source"
+              placeholderTextColor="#71717A"
+            />
+          </View>
+
+          {/* Bottom Buttons */}
+          <View style={styles.bottomButtons}>
+            <TouchableOpacity style={styles.backButton} onPress={handleBack}>
+              <Text style={styles.backButtonText}>Back</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.continueButton} onPress={handleContinue}>
+              <Text style={styles.continueButtonText}>Continue</Text>
             </TouchableOpacity>
           </View>
-          <View style={styles.progressBarContainer}>
-            <View style={styles.progressBarBackground}>
-              <View style={[styles.progressBarFill, { width: '75%' }]} />
-            </View>
-          </View>
-        </View>
-
-        {/* Title Section */}
-        <Text style={styles.heading}>Market Outcomes</Text>
-        <Text style={styles.description}>
-          Define the possible outcomes for your prediction market.
-        </Text>
-
-        {/* Yes Outcome Section */}
-        <View style={styles.outcomeContainer}>
-          <View style={styles.outcomeHeader}>
-            <Text style={styles.outcomeTitle}>Yes Outcome</Text>
-            <View style={styles.yesTag}>
-              <Text style={styles.tagText}>Yes</Text>
-            </View>
-          </View>
-          <TextInput
-            style={styles.outcomeInput}
-            value={yesOutcome}
-            onChangeText={setYesOutcome}
-            placeholder="Yes"
-            placeholderTextColor="#71717A"
-          />
-          <TextInput
-            style={styles.descriptionInput}
-            value={yesDescription}
-            onChangeText={setYesDescription}
-            placeholder="Add description (optional)"
-            placeholderTextColor="#71717A"
-            multiline
-          />
-        </View>
-
-        {/* No Outcome Section */}
-        <View style={styles.outcomeContainer}>
-          <View style={styles.outcomeHeader}>
-            <Text style={styles.outcomeTitle}>No Outcome</Text>
-            <View style={styles.noTag}>
-              <Text style={styles.tagText}>No</Text>
-            </View>
-          </View>
-          <TextInput
-            style={styles.outcomeInput}
-            value={noOutcome}
-            onChangeText={setNoOutcome}
-            placeholder="No"
-            placeholderTextColor="#71717A"
-          />
-          <TextInput
-            style={styles.descriptionInput}
-            value={noDescription}
-            onChangeText={setNoDescription}
-            placeholder="Add description (optional)"
-            placeholderTextColor="#71717A"
-            multiline
-          />
-        </View>
-
-        {/* Resolution Source Section */}
-        <View style={styles.resolutionContainer}>
-          <View style={styles.resolutionHeader}>
-            <Text style={styles.resolutionTitle}>Resolution Source</Text>
-            <FontAwesome5 name="info-circle" size={16} color="#9CA3AF" />
-          </View>
-          <Text style={styles.resolutionDescription}>
-            Specify where the outcome will be verified
-          </Text>
-          <TextInput
-            style={styles.resolutionInput}
-            value={resolutionSource}
-            onChangeText={setResolutionSource}
-            placeholder="Enter URL or description of resolution source"
-            placeholderTextColor="#71717A"
-          />
-        </View>
-
-        {/* Bottom Buttons */}
-        <View style={styles.bottomButtons}>
-          <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-            <Text style={styles.backButtonText}>Back</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.continueButton} onPress={handleContinue}>
-            <Text style={styles.continueButtonText}>Continue</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-    </View>
+        </ScrollView>
+      </View>
+    </>
   );
 }
 

@@ -43,7 +43,7 @@ export default function WithdrawPiScreen() {
         <View style={styles.balanceCard}>
           <Text style={styles.balanceLabel}>Total Balance</Text>
           <Text style={styles.balanceAmount}>π 1,234.56</Text>
-          <Text style={styles.balanceUsd}>≈ $617.28 Units</Text>
+          <Text style={styles.balanceUsd}>≈ π 617.28 Units</Text>
         </View>
 
         {/* Deposit Section */}

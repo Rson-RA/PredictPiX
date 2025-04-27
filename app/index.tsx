@@ -3,15 +3,17 @@ import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'rea
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import ConnectPiDialog from '../components/ConnectPiDialog';
-import ConnectWalletDialog from '../components/ConnectWalletDialog';
-import WalletConnectStatus from '../components/WalletConnectStatus';
+import ConnectPiDialog from '@/components/ConnectPiDialog';
+import ConnectWalletDialog from '@/components/ConnectWalletDialog';
+import WalletConnectStatus from '@/components/WalletConnectStatus';
+import WalletConnectionFailed from '@/components/WalletConnectionFailed';
 
 export default function LandingScreen() {
   const router = useRouter();
   const [showPiDialog, setShowPiDialog] = useState(false);
   const [showWalletDialog, setShowWalletDialog] = useState(false);
   const [showWalletConfirm, setShowWalletConfirm] = useState(false);
+  const [showWalletConnectionFailed, setShowWalletConnectionFailed] = useState(false);
 
   const handlePiNetworkSignIn = () => {
     setShowPiDialog(true);
@@ -19,9 +21,7 @@ export default function LandingScreen() {
 
   const handleConnectPi = () => {
     setShowPiDialog(false);
-    setShowWalletDialog(true);
-    // TODO: Implement Pi Network connection
-    // router.push('/markets');
+    setShowWalletConfirm(true)
   };
 
   const handleWalletConfirm = () => {
@@ -29,9 +29,12 @@ export default function LandingScreen() {
     setShowWalletConfirm(true);
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = (isContinue: boolean) => {
     setShowWalletConfirm(false);
-    router.push('/markets');
+    if (isContinue) {
+      // router.push('/markets');
+      setShowWalletConnectionFailed(true);
+    }
   };
 
   const handleEmailSignIn = () => {
@@ -40,6 +43,19 @@ export default function LandingScreen() {
 
   const handlePreviewMarkets = () => {
     router.push('/markets');
+  };
+
+  const handleHelp = () => {
+    setShowWalletDialog(true);
+  };
+
+  const handleRetry = () => {
+    setShowWalletConnectionFailed(false);
+    setShowPiDialog(true);
+  };
+
+  const handleCancel = () => {
+    setShowWalletConnectionFailed(false);
   };
 
   return (
@@ -105,22 +121,29 @@ export default function LandingScreen() {
         </View>
       </ScrollView>
 
-      <ConnectPiDialog
+      {showPiDialog && (<ConnectPiDialog
         visible={showPiDialog}
         onClose={() => setShowPiDialog(false)}
         onConnect={handleConnectPi}
-      />
+        onHelp={handleHelp}
+      />)}
 
-      <ConnectWalletDialog
+      {showWalletDialog && (<ConnectWalletDialog
         visible={showWalletDialog}
         onClose={() => setShowWalletDialog(false)}
         onOpenWallet={handleWalletConfirm}
-      />
+      />)}
 
-      <WalletConnectStatus
+      {showWalletConfirm && (<WalletConnectStatus
         visible={showWalletConfirm}
         onContinue={handleConfirm}
-      />
+      />)}
+
+      {showWalletConnectionFailed && (<WalletConnectionFailed
+        visible={showWalletConnectionFailed}
+        onRetry={handleRetry}
+        onCancel={handleCancel}
+      />)}
     </View>
   );
 }

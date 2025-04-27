@@ -1,20 +1,109 @@
-import React from 'react';
-import { View, StyleSheet, ScrollView, TouchableOpacity, Text } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, ScrollView, TouchableOpacity, Text, Alert } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import MarketCard from '../components/MarketCard';
+import { Market } from '@/types/models';
+import marketsApi from '@/api/markets';
+import BuyPosition from '@/components/BuyPosition';
+import ConfirmPosition from '@/components/ConfirmPosition';
+import predictionsApi from '@/api/predictions';
 
 export default function FeaturedMarketsScreen(): JSX.Element {
   const router = useRouter();
+  const [markets, setMarkets] = useState<Market[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [market, setMarket] = useState<Market | null>(null);
 
-  const handleBuyYes = (amount: number) => {
+  const [showBuyDialog, setShowBuyDialog] = useState(false);
+  const [isYesPosition, setIsYesPosition] = useState(true);
+
+  const [amount, setAmount] = useState<string>('');
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+
+  const transactionFee = 2.0;
+  const potentialReturn = amount ? Number(amount) * 1.25 : 0;
+  const totalCost = amount ? Number(amount) + transactionFee : 0;
+  const currentProbability = ((market?.yes_pool || 0) / (market?.total_pool || 0)) * 100;
+
+  useEffect(() => {
+    fetchMarkets();
+  }, []);
+
+  const fetchMarkets = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const response = await marketsApi.getMarkets({ status: 'active' });
+      setMarkets(response);
+    } catch (err) {
+      setError('Failed to load markets. Please try again.');
+      console.error('Error fetching markets:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleBuyYes = (market: Market) => {
+    if(market?.status != 'active') {
+      Alert.alert('Error', 'Market is not active');
+      return;
+    }
     console.log('Buy Yes action triggered with amount:', amount);
     // TODO: Implement buy yes logic
+    setMarket(market)
+    setIsYesPosition(true);
+    setShowBuyDialog(true);
   };
 
-  const handleBuyNo = (amount: number) => {
-    console.log('Buy No action triggered with amount:', amount);
+  const handleBuyNo = (market: Market) => {
+    console.log('Buy No action triggered with amount:', amount, market);
+
+    if(market?.status != 'active') {
+      Alert.alert('Error', 'Market is not active');
+      return;
+    }
     // TODO: Implement buy no logic
+    setMarket(market)
+    setIsYesPosition(false);
+    setShowBuyDialog(true);
   };
+
+  const handleConfirm = (amount: number) => {
+    setAmount(amount.toString());
+    setShowBuyDialog(false);
+    setShowConfirmDialog(true);
+  };
+
+  const handleConfirmPosition = () => {
+    setShowConfirmDialog(false);
+    setShowBuyDialog(false);
+
+    if(!market?.id) {
+      Alert.alert('Error', 'Market not found');
+      return;
+    }
+    // TODO: Implement API call to buy position
+    predictionsApi.createPrediction({
+      market_id: market?.id || 0,
+      amount: Number(amount),
+      predicted_outcome: isYesPosition ? 'yes' : 'no'
+    }).then((prediction) => {
+      console.log('Prediction created:', prediction);
+      router.push({
+        pathname: '/purchase-status',
+        params: {
+          market: market.title,
+          position: isYesPosition ? 'yes' : 'no',
+          stakeAmount: Number(amount)?.toFixed(2),
+          transactionFee: transactionFee?.toFixed(2),
+          potentialProfit: potentialReturn?.toFixed(2),
+        }
+      });
+    }).catch((error) => {
+      console.error('Error creating prediction:', error);
+    });
+  };  
 
   const handleHome = () => {
     router.push('/');
@@ -24,15 +113,37 @@ export default function FeaturedMarketsScreen(): JSX.Element {
     <View style={styles.container}>
       <ScrollView style={styles.scrollView}>
         <View style={styles.marketsContainer}>
-          <MarketCard
-            title="Will Bitcoin reach $100,000 by the end of 2024?"
-            timeLeft="2d 5h"
-            percentage="75%"
-            volume="$50,234"
-            onBuyYes={handleBuyYes}
-            onBuyNo={handleBuyNo}
-          />
+          {markets?.map((market) => (
+            <MarketCard
+              key={market.id}
+              market={market}
+              onBuyYes={handleBuyYes}
+              onBuyNo={handleBuyNo}
+            />
+          ))}
         </View>
+
+        {showBuyDialog && market && <BuyPosition
+          visible={showBuyDialog}
+          onClose={() => setShowBuyDialog(false)}
+          onConfirm={handleConfirm}
+          isYesPosition={isYesPosition}
+          market={market}
+        />}
+
+        {showConfirmDialog && market && <ConfirmPosition
+          visible={showConfirmDialog}
+          onClose={() => setShowConfirmDialog(false)}
+          onConfirm={handleConfirmPosition}
+          stake={Number(amount)}
+          position={isYesPosition ? 'yes' : 'no'}
+          potentialReturn={potentialReturn}
+          transactionFee={transactionFee}
+          totalCost={totalCost}
+          market={market}
+          isYesPosition={isYesPosition}
+        />}
+        
       </ScrollView>
 
       {/* Bottom Navigation */}

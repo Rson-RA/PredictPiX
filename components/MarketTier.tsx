@@ -60,7 +60,7 @@ export default function MarketTier({ visible, onClose, onContinue, onSelectTier 
             <Text style={styles.tierDescription}>Maximum exposure and earnings</Text>
             <View style={styles.profitShareContainer}>
               <FontAwesome5 name="chart-line" size={14} color="#8B5CF6" />
-              <Text style={styles.profitShareText}>18% Profit Share</Text>
+              <Text style={styles.profitShareText}>18% Creator Reward Share</Text>
             </View>
             <TouchableOpacity 
               style={styles.selectButton}
@@ -81,7 +81,7 @@ export default function MarketTier({ visible, onClose, onContinue, onSelectTier 
             <Text style={styles.tierDescription}>Maximum exposure and earnings</Text>
             <View style={styles.profitShareContainer}>
               <FontAwesome5 name="chart-line" size={14} color="#8B5CF6" />
-              <Text style={styles.profitShareText}>26.5% Profit Share</Text>
+              <Text style={styles.profitShareText}>26.5% Creator Reward Share</Text>
             </View>
             <TouchableOpacity 
               style={styles.selectButton}

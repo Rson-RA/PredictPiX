@@ -1,41 +1,35 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, Modal } from 'react-native';
-import ConfirmPosition from './ConfirmPosition';
+import { Market } from '../types/models';
 
 interface BuyPositionProps {
-  visible: boolean;
-  onClose: () => void;
-  onConfirm: (amount: number) => void;
-  currentProbability: string;
+  market: Market;
+  onSuccess?: () => void;
+  visible?: boolean;
+  onClose?: () => void;
+  onConfirm?: (amount: number) => void;
   isYesPosition?: boolean;
-  marketQuestion: string;
 }
 
 export default function BuyPosition({
-  visible, 
-  onClose, 
-  onConfirm,
-  currentProbability,
+  market,
+  visible = true,
+  onClose = () => {},
+  onConfirm = () => {},
   isYesPosition = true,
-  marketQuestion,
 }: BuyPositionProps) {
   const [amount, setAmount] = useState<string>('');
-  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   
   const predefinedAmounts = ['10', '50', '100', '500'];
-  const transactionFee = 2.50;
-  const potentialReturn = amount ? Number(amount) * 3.245 : 0;
+  const transactionFee = 2.0;
+  const potentialReturn = amount ? Number(amount) * 1.25 : 0;
   const totalCost = amount ? Number(amount) + transactionFee : 0;
+  const currentProbability = (market.yes_pool / market.total_pool) * 100;
 
   const handleConfirm = () => {
     if (amount) {
-      setShowConfirmDialog(true);
+      onConfirm(Number(amount));
     }
-  };
-
-  const handleConfirmPosition = () => {
-    setShowConfirmDialog(false);
-    onConfirm(Number(amount));
   };
 
   return (
@@ -62,7 +56,7 @@ export default function BuyPosition({
               <Text style={[
                 styles.probabilityValue,
                 !isYesPosition && { color: '#F87171' }
-              ]}>{currentProbability}</Text>
+              ]}>{(market.yes_pool/market.total_pool) * 100}%</Text>
             </View>
 
             {/* Stake Amount */}
@@ -92,7 +86,7 @@ export default function BuyPosition({
                     <Text style={[
                       styles.amountButtonText,
                       amount === presetAmount && styles.amountButtonTextSelected
-                    ]}>${presetAmount}</Text>
+                    ]}>π{presetAmount}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
@@ -102,15 +96,15 @@ export default function BuyPosition({
             <View style={styles.detailsContainer}>
               <View style={styles.detailRow}>
                 <Text style={styles.detailLabel}>Potential Return</Text>
-                <Text style={styles.potentialReturn}>+${potentialReturn?.toFixed(2)}</Text>
+                <Text style={styles.potentialReturn}>+π{potentialReturn?.toFixed(2)}</Text>
               </View>
               <View style={styles.detailRow}>
                 <Text style={styles.detailLabel}>Transaction Fee</Text>
-                <Text style={styles.detailValue}>${transactionFee?.toFixed(2)}</Text>
+                <Text style={styles.detailValue}>π{transactionFee?.toFixed(2)}</Text>
               </View>
               <View style={styles.detailRow}>
                 <Text style={styles.detailLabel}>Total Cost</Text>
-                <Text style={styles.detailValue}>${totalCost?.toFixed(2)}</Text>
+                <Text style={styles.detailValue}>π{totalCost.toFixed(2)}</Text>
               </View>
             </View>
 
@@ -142,18 +136,6 @@ export default function BuyPosition({
           </View>
         </View>
       </Modal>
-
-      <ConfirmPosition
-        visible={showConfirmDialog}
-        onClose={() => setShowConfirmDialog(false)}
-        onConfirm={handleConfirmPosition}
-        marketQuestion={marketQuestion}
-        position={`${isYesPosition ? 'YES' : 'NO'} @ ${currentProbability}`}
-        stake={Number(amount)}
-        potentialReturn={potentialReturn}
-        transactionFee={transactionFee}
-        totalCost={totalCost}
-      />
     </>
   );
 }

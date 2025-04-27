@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { useRouter, useLocalSearchParams, Stack } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 
 interface PurchaseStatusParams {
   market?: string;
@@ -81,17 +81,17 @@ export default function PurchaseStatusScreen() {
 
           <View style={styles.detailRow}>
             <Text style={styles.detailLabel}>Stake Amount</Text>
-            <Text style={styles.detailValue}>${stakeAmount}</Text>
+            <Text style={styles.detailValue}>π{stakeAmount}</Text>
           </View>
 
           <View style={styles.detailRow}>
             <Text style={styles.detailLabel}>Transaction Fee</Text>
-            <Text style={styles.detailValue}>${transactionFee}</Text>
+            <Text style={styles.detailValue}>π{transactionFee}</Text>
           </View>
 
           <View style={styles.detailRow}>
             <Text style={styles.detailLabel}>Potential Profit</Text>
-            <Text style={[styles.detailValue, styles.profitValue]}>+${potentialProfit}</Text>
+            <Text style={[styles.detailValue, styles.profitValue]}>+π{potentialProfit}</Text>
           </View>
         </View>
 
@@ -118,7 +118,7 @@ export default function PurchaseStatusScreen() {
               <Ionicons name="logo-twitter" size={24} color="#1DA1F2" />
             </TouchableOpacity>
             <TouchableOpacity style={styles.shareButton} onPress={handleShare}>
-              <Ionicons name="logo-telegram" size={24} color="#0088CC" />
+              <FontAwesome5 name="telegram" size={24} color="#0088CC" />
             </TouchableOpacity>
             <TouchableOpacity style={styles.shareButton} onPress={handleShare}>
               <Ionicons name="link" size={24} color="#8B5CF6" />
@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
   },
   detailValue: {
     fontSize: 14,
-    color: '#FFFFFF',
+    color: '#9CA3AF',
     fontWeight: '500',
   },
   positionValue: {

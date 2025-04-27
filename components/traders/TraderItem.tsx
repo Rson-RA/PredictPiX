@@ -21,19 +21,18 @@ const TraderItem = ({ trader }: TraderItemProps) => {
   return (
     <View style={styles.container}>
       <View style={styles.leftSection}>
-      <Text style={[styles.traderRank, { color: '#FFB800' }]}>{trader.rank || ""}</Text>
+      <Text style={[styles.traderRank, { color: '#FFB800' }]}>{trader.rank || "0"}</Text>
         <Image
           source={{ uri: getFullAvatarUrl(trader.avatar_url) || 'https://via.placeholder.com/40' }}
           style={styles.avatar}
         />
         <View style={styles.info}>
           <Text style={styles.name}>{trader.firstname} {trader.lastname}</Text>
-          <Text style={styles.username}>@{trader.username}</Text>
+          {/* <Text style={styles.username}>@{trader.username}</Text> */}
         </View>
       </View>
       <View style={styles.stats}>
-        // <Text style={styles.winRate}>Win Rate: {trader.winRate}%</Text>
-        <Text style={styles.profit}>Profit: ${trader.totalProfit?.toFixed(2)}</Text>
+        <Text style={styles.profit}>{trader.totalProfit?.toFixed(2) || 0} π</Text>
       </View>
     </View>
   );
@@ -45,7 +44,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 12,
-    backgroundColor: Colors.background,
+    backgroundColor: Colors.cardBackground,
     borderRadius: 8,
     marginVertical: 4,
     borderWidth: 1,

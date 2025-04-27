@@ -1,5 +1,6 @@
 export interface Market {
   id: number;
+  creator_id: number;
   title: string;
   description: string;
   end_time: string;
@@ -17,24 +18,80 @@ export interface Market {
   };
   created_at: string;
   updated_at: string;
-  total_predictions: number;
   category?: string;
+  market_metadata?: {
+    yes: string;
+    no: string;
+    source: string;
+    yesDescription: string;
+    noDescription: string;
+
+  };
+  total_predictions: number;
+  user_prediction_amount: number;
+  user_predicted_outcome: string;
+  total_markets_by_creator: number;
+  current_odds: {
+    yes: number;
+    no: number;
+  };
+  implied_probabilities: {
+    yes: number;
+    no: number;
+  };
+}
+
+export interface MarketCreate {
+  tier: string;
+  title: string;
+  description: string;
+  market_metadata: {
+    yes: string;
+    no: string;
+    source: string;
+    yesDescription: string;
+    noDescription: string;
+  };
+  end_time: string;
 }
 
 export interface Prediction {
   id: number;
   market_id: number;
   user_id: number;
-  prediction_value: string;
-  confidence: number;
-  stake_amount: number;
-  status: 'pending' | 'won' | 'lost';
+  amount: number;
+  predicted_outcome: string;
+  potential_winnings: number;
+  status: 'pending' | 'active' | 'won' | 'lost' | 'cancelled';
   created_at: string;
   updated_at: string;
-  reward_amount: number | null;
   user: {
+    id: number;
+    pi_user_id: string | null;
+    email: string;
     username: string;
+    phone_number: string;
+    firstname: string;
+    lastname: string;
     avatar_url: string | null;
+  };
+  market: {
+    title: string;
+    description: string;
+    end_time: string;
+    resolution_time: string;
+    creator_fee_percentage: number;
+    platform_fee_percentage: number;
+    creator: {
+      username: string;
+      avatar_url: string | null;
+    };
+  };
+  reward: {
+    amount: number;
+    status: 'pending' | 'processed' | 'failed' | 'cancelled';
+    created_at: string;
+    updated_at: string;
   };
 }
 

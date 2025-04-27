@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView, ViewStyle, TextStyle } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { useMarketCreation } from '@/context/MarketCreationContext';
 
 interface StyleProps {
   container: ViewStyle;
@@ -49,7 +50,14 @@ interface StyleProps {
 export default function MarketDescriptionScreen() {
   const [description, setDescription] = useState<string>('');
   const router = useRouter();
+  const { updateMarketData, marketData } = useMarketCreation();
   const isValidLength = description.length >= 50 && description.length <= 1000;
+
+  useEffect(() => {
+    if (marketData?.description) {
+      setDescription(marketData.description);
+    }
+  }, []);
 
   const handleBack = (): void => {
     router.back();
@@ -57,6 +65,7 @@ export default function MarketDescriptionScreen() {
 
   const handleContinue = (): void => {
     if (isValidLength) {
+      updateMarketData({ description });
       router.push('/market-outcomes');
     }
   };
@@ -65,7 +74,7 @@ export default function MarketDescriptionScreen() {
     <>
       <Stack.Screen 
         options={{
-          title: "Market Description",
+          title: "Create Market",
           headerShown: true,
         }} 
       />

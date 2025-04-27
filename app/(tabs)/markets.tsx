@@ -1,52 +1,18 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
-import { FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import marketsApi from '@/api/markets';
 import { Market } from '@/types/models';
 import { useAuth } from '@/context/AuthContext';
-const categories = ['All Markets', 'Crypto', 'Politics', 'Sports'] as const;
-
-// Helper function to safely calculate time remaining
-const getTimeRemaining = (endTimeStr: string): { value: number; unit: 'days' | 'hours' } | null => {
-  try {
-    const endTime = new Date(endTimeStr).getTime();
-    const now = new Date().getTime();
-    
-    if (isNaN(endTime)) {
-      return null;
-    }
-    
-    const diffMs = endTime - now;
-    if (diffMs <= 0) {
-      return null;
-    }
-    
-    const days = Math.ceil(diffMs / (24 * 60 * 60 * 1000));
-    if (days > 0) {
-      return { value: days, unit: 'days' };
-    }
-    
-    const hours = Math.ceil(diffMs / (60 * 60 * 1000));
-    return { value: hours, unit: 'hours' };
-  } catch {
-    return null;
-  }
-};
-
-// Helper function to render time remaining
-const renderTimeRemaining = (endTime: string): string => {
-  const remaining = getTimeRemaining(endTime);
-  if (!remaining) {
-    return 'Ended';
-  }
-  return `${remaining.value}${remaining.unit === 'days' ? 'd' : 'h'}\nleft`;
-};
+import { getTimeRemaining, renderTimeRemaining } from '@/utils';
+const categories = ['All Markets', 'trending', 'newly created', 'soon-to-resolve'] as const;
 
 export default function MarketsScreen() {
   const [selectedCategory, setSelectedCategory] = useState<typeof categories[number]>('All Markets');
   const [markets, setMarkets] = useState<Market[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const {user} = useAuth();
@@ -55,9 +21,11 @@ export default function MarketsScreen() {
     fetchMarkets();
   }, [selectedCategory]);
 
-  const fetchMarkets = async () => {
+  const fetchMarkets = async (isRefresh = false) => {
     try {
-      setIsLoading(true);
+      if (!isRefresh) {
+        setIsLoading(true);
+      }
       setError(null);
       const filters = selectedCategory !== 'All Markets' ? { category: selectedCategory.toLowerCase() } : {};
       const response = await marketsApi.getMarkets(filters);
@@ -67,7 +35,13 @@ export default function MarketsScreen() {
       console.error('Error fetching markets:', err);
     } finally {
       setIsLoading(false);
+      setIsRefreshing(false);
     }
+  };
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    fetchMarkets(true);
   };
 
   const handleCreateMarket = () => {
@@ -100,12 +74,13 @@ export default function MarketsScreen() {
         </View>
         <View style={styles.marketStats}>
           <View style={styles.predictionStats}>
-            <Text style={[
+            {/*<Text style={[
               styles.predictionText,
               { color: item.yes_pool > item.no_pool ? '#10B981' : '#EF4444' }
             ]}>
-              {Math.round((item.yes_pool / (item.yes_pool + item.no_pool || 1)) * 100)}% Yes
-            </Text>
+              {Math.round((item.yes_pool / (item.yes_pool + item.no_pool || 1)) * 100)}
+              {item.yes_pool}
+            </Text> */}
             <View style={styles.participantsContainer}>
               <FontAwesome5 name="user-friends" size={12} color="#6B7280" />
               <Text style={styles.participantsText}>
@@ -113,7 +88,7 @@ export default function MarketsScreen() {
               </Text>
             </View>
           </View>
-          <Text style={styles.valueText}>${item.total_pool.toLocaleString()}</Text>
+          <Text style={styles.valueText}>π {item.total_pool.toLocaleString()}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -183,8 +158,8 @@ export default function MarketsScreen() {
           keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={styles.marketList}
           showsVerticalScrollIndicator={false}
-          refreshing={isLoading}
-          onRefresh={fetchMarkets}
+          refreshing={isRefreshing}
+          onRefresh={handleRefresh}
         />
       )}
     </View>
@@ -237,7 +212,7 @@ const styles = StyleSheet.create({
   categoriesContainer: {
     height: 40,
     marginTop: 10,
-    marginBottom: -10,
+    marginBottom: 10,
     flexGrow: 0,
   },
   categoriesContent: {
@@ -321,7 +296,7 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   participantsText: {
-    color: '#6B7280',
+    color: '#9CA3AF',
     fontSize: 12,
     marginLeft: 4,
   },

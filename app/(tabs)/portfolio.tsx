@@ -10,19 +10,19 @@ const activePredictions = [
   {
     id: '1',
     category: 'Crypto',
-    title: 'BTC > $100k by Dec 2025',
-    prediction: 'Yes @ 0.67¢',
+    title: 'BTC > π100k by Dec 2025',
+    prediction: 'Yes @ 0.67π',
     invested: '$500 invested',
-    profit: '+$125.50',
+    profit: '+π125.50',
     isPositive: true,
   },
   {
     id: '2',
     category: 'Sports',
     title: 'Lakers NBA Champions 2025',
-    prediction: 'No @ 0.55¢',
-    invested: '$300 invested',
-    profit: '-$45.30',
+    prediction: 'No @ 0.55π',
+    invested: 'π300 invested',
+    profit: '-π45.30',
     isPositive: false,
   },
 ];
@@ -53,8 +53,8 @@ export default function PortfolioScreen() {
       {/* Balance Card */}
       <View style={styles.balanceCard}>
         <Text style={styles.balanceLabel}>Total Balance</Text>
-        <Text style={styles.balanceAmount}>${user?.balance || 0}</Text>
-        <Text style={styles.balanceChange}>+${user?.total_profit || 0} (24h)</Text>
+        <Text style={styles.balanceAmount}>π{user?.balance || 0}</Text>
+        <Text style={styles.balanceChange}>+π{user?.total_profit || 0} (24h)</Text>
 
         {/* Action Buttons */}
         <View style={styles.actionButtons}>
