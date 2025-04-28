@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert, ActivityIndicator } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useMarketCreation } from '@/context/MarketCreationContext';
@@ -8,20 +8,25 @@ import marketsApi from '@/api/markets';
 export default function MarketReviewScreen() {
   const router = useRouter();
   const { marketData } = useMarketCreation();
+  const [loading, setLoading] = React.useState(false);
 
   const handleBack = () => {
     router.back();
   };
 
   const handleSubmit = () => {
-    // Navigate to submitted screen
-    marketsApi.createMarket(marketData).then((response) => {
-      console.log(response);
-      router.push('/market-submitted');
-    }).catch((error) => {
-      Alert.alert('Error', error.message);
-      console.log(error);
-    });
+    setLoading(true);
+    marketsApi.createMarket(marketData)
+      .then((response) => {
+        setLoading(false);
+        console.log(response);
+        router.push('/market-submitted');
+      })
+      .catch((error) => {
+        setLoading(false);
+        Alert.alert('Error', error.message);
+        console.log(error);
+      });
   };
 
   return (
@@ -108,12 +113,16 @@ export default function MarketReviewScreen() {
 
           {/* Bottom Buttons */}
           <View style={styles.bottomButtons}>
-            <TouchableOpacity style={styles.backButton} onPress={handleBack}>
+            <TouchableOpacity style={styles.backButton} onPress={handleBack} disabled={loading}>
               <Text style={styles.backButtonText}>Back</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-              <Text style={styles.submitButtonText}>Submit Market</Text>
-            </TouchableOpacity>
+            {loading ? (
+              <ActivityIndicator size="large" color="#8B5CF6" style={{ marginVertical: 16 }} />
+            ) : (
+              <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+                <Text style={styles.submitButtonText}>Submit Market</Text>
+              </TouchableOpacity>
+            )}
           </View>
         </ScrollView>
       </View>

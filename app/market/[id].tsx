@@ -19,6 +19,7 @@ export default function MarketDetailsScreen() {
 
   const [amount, setAmount] = useState<string>('');
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [creatingPrediction, setCreatingPrediction] = useState(false);
   const transactionFee = 2.0;
   const potentialReturn = amount ? Number(amount) * 1.25 : 0;
   const totalCost = amount ? Number(amount) + transactionFee : 0;
@@ -69,12 +70,14 @@ export default function MarketDetailsScreen() {
       return;
     }
     // TODO: Implement API call to buy position
+    setCreatingPrediction(true);
     predictionsApi.createPrediction({
       market_id: market?.id || 0,
       amount: Number(amount),
       predicted_outcome: isYesPosition ? 'yes' : 'no'
     }).then((prediction) => {
       console.log('Prediction created:', prediction);
+      setCreatingPrediction(false);
       router.push({
         pathname: '/purchase-status',
         params: {
@@ -87,6 +90,8 @@ export default function MarketDetailsScreen() {
       });
     }).catch((error) => {
       console.error('Error creating prediction:', error);
+      setCreatingPrediction(false);
+      Alert.alert('Error', error.message || 'Failed to create prediction');
     });
   };  
 
@@ -123,6 +128,12 @@ export default function MarketDetailsScreen() {
           headerBackTitle: 'Back',
         }}
       />
+      {creatingPrediction && (
+        <View style={[styles.loadingOverlay, styles.centered]}>
+          <ActivityIndicator size="large" color={Colors.primary} />
+          <Text style={styles.loadingText}>Creating Prediction...</Text>
+        </View>
+      )}
       <View style={styles.mainContainer}>
         <ScrollView 
           style={styles.container}
@@ -389,5 +400,26 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  loadingOverlay: {
+    zIndex: 1,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  centered: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    color: Colors.white,
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginTop: 16,
   },
 }); 

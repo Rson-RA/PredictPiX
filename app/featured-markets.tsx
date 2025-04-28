@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, TouchableOpacity, Text, Alert } from 'react-native';
+import { View, StyleSheet, ScrollView, TouchableOpacity, Text, Alert, ActivityIndicator } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import MarketCard from '../components/MarketCard';
 import { Market } from '@/types/models';
@@ -7,6 +7,7 @@ import marketsApi from '@/api/markets';
 import BuyPosition from '@/components/BuyPosition';
 import ConfirmPosition from '@/components/ConfirmPosition';
 import predictionsApi from '@/api/predictions';
+import { Colors } from '@/constants/Colors';
 
 export default function FeaturedMarketsScreen(): JSX.Element {
   const router = useRouter();
@@ -20,7 +21,7 @@ export default function FeaturedMarketsScreen(): JSX.Element {
 
   const [amount, setAmount] = useState<string>('');
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-
+  const [creatingPrediction, setCreatingPrediction] = useState(false);
   const transactionFee = 2.0;
   const potentialReturn = amount ? Number(amount) * 1.25 : 0;
   const totalCost = amount ? Number(amount) + transactionFee : 0;
@@ -84,12 +85,14 @@ export default function FeaturedMarketsScreen(): JSX.Element {
       return;
     }
     // TODO: Implement API call to buy position
+    setCreatingPrediction(true);
     predictionsApi.createPrediction({
       market_id: market?.id || 0,
       amount: Number(amount),
       predicted_outcome: isYesPosition ? 'yes' : 'no'
     }).then((prediction) => {
       console.log('Prediction created:', prediction);
+      setCreatingPrediction(false);
       router.push({
         pathname: '/purchase-status',
         params: {
@@ -102,11 +105,13 @@ export default function FeaturedMarketsScreen(): JSX.Element {
       });
     }).catch((error) => {
       console.error('Error creating prediction:', error);
+      setCreatingPrediction(false);
+      Alert.alert('Error', error.message || 'Failed to create prediction');
     });
   };  
 
   const handleHome = () => {
-    router.push('/');
+    router.replace('/(tabs)');
   };
 
   return (
@@ -123,6 +128,12 @@ export default function FeaturedMarketsScreen(): JSX.Element {
           ))}
         </View>
 
+        {creatingPrediction && (
+          <View style={[styles.loadingOverlay, styles.centered]}>
+            <ActivityIndicator size="large" color={Colors.primary} />
+            <Text style={styles.loadingText}>Creating Prediction...</Text>
+          </View>
+        )}
         {showBuyDialog && market && <BuyPosition
           visible={showBuyDialog}
           onClose={() => setShowBuyDialog(false)}
@@ -188,6 +199,26 @@ const styles = StyleSheet.create({
   },
   homeButtonText: {
     color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  loadingOverlay: {
+    zIndex: 1,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  centered: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    color: "#FFFFFF",
     fontSize: 16,
     fontWeight: 'bold',
   },

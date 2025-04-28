@@ -8,14 +8,26 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "extra": {
+      "apiUrl": "http://152.42.252.223:8000/api",
+      "baseURL": "http://152.42.252.223:8000",
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "6dde6710-f32b-47ab-885d-9dc9c2d10bfa"
+      }
+    },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.predictpix.app"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.predictpix.app"
     },
     "web": {
       "bundler": "metro",

@@ -51,8 +51,8 @@ export default function LeaderboardScreen() {
               <Text style={styles.rankText}>2</Text>
             </View>
           </View>
-          <Text style={styles.username}>{second.username}</Text>
-          <Text style={styles.profit}>{second.total_profit}</Text>
+          <Text style={styles.username}>{second?.username}</Text>
+          <Text style={styles.profit}>{second?.total_profit}</Text>
         </View>
 
         {/* First Place */}
@@ -63,8 +63,8 @@ export default function LeaderboardScreen() {
               <Text style={styles.rankText}>1</Text>
             </View>
           </View>
-          <Text style={styles.username}>{first.username}</Text>
-          <Text style={styles.profit}>{first.total_profit}</Text>
+          <Text style={styles.username}>{first?.username}</Text>
+          <Text style={styles.profit}>{first?.total_profit}</Text>
         </View>
 
         {/* Third Place */}
@@ -203,6 +203,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   topThreeContainer: {
+    marginTop: 16,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'flex-end',

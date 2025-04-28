@@ -27,7 +27,9 @@ export default function MarketsScreen() {
         setIsLoading(true);
       }
       setError(null);
-      const filters = selectedCategory !== 'All Markets' ? { category: selectedCategory.toLowerCase() } : {};
+      const filters = selectedCategory !== 'All Markets' ? 
+      { category: selectedCategory.toLowerCase(), status: 'active' as Market['status'] } : 
+      { status: 'active' as Market['status'] };
       const response = await marketsApi.getMarkets(filters);
       setMarkets(response);
     } catch (err) {

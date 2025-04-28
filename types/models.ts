@@ -45,7 +45,10 @@ export interface MarketCreate {
   tier: string;
   title: string;
   description: string;
-  market_metadata: {
+  resolution_time: string;
+  creator_fee_percentage: number;
+  platform_fee_percentage: number;
+  metadata: {
     yes: string;
     no: string;
     source: string;

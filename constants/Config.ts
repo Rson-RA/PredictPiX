@@ -1,3 +1,6 @@
 // API configuration
-export const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
-export const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://localhost:8000'; 
+import Constants from 'expo-constants';
+const { apiUrl, baseURL } = Constants.expoConfig?.extra ?? {};
+
+export const API_URL = apiUrl || 'http://152.42.252.223:8000/api';
+export const BASE_URL = baseURL || 'http://152.42.252.223:8000'; 

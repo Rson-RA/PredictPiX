@@ -4,8 +4,10 @@ import { StatusBar } from 'expo-status-bar';
 import { AuthProvider } from '@/context/AuthContext';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { MarketCreationProvider } from '@/context/MarketCreationContext';
+import { API_URL } from '@/constants/Config';
 
 export default function RootLayout() {
+  console.log(API_URL);
   return (
     <AuthProvider>
       <MarketCreationProvider>

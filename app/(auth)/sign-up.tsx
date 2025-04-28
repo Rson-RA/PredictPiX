@@ -29,7 +29,7 @@ export default function SignUpScreen() {
     setIsLoading(true);
     try {
       await register({ email, password, username });
-      router.replace('/(tabs)');
+      router.replace('/');
     } catch (error) {
       Alert.alert('Error', 'Registration failed. Please try again.');
     } finally {
