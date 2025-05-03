@@ -1,5 +1,5 @@
 import api from './config';
-import { Prediction } from '@/types/models';
+import { PlacePredictResponse, Prediction } from '@/types/models';
 
 interface PredictionFilters {
   market_id?: number;
@@ -20,12 +20,14 @@ interface PredictionResponse {
 interface CreatePredictionData {
   market_id: number;
   amount: number;
-  predicted_outcome: string;
+  predicted_outcome: boolean;
 }
 
 const predictionsApi = {
-  getPredictions: async (filters: PredictionFilters = {} ): Promise<PredictionResponse> => {
-    const response = await api.get('/predictions');
+  getPredictions: async (filters: PredictionFilters = {} ): Promise<Prediction[]> => {
+    const response = await api.get('/predictions', {
+      params: filters,
+    });
     return response.data;
   },
 
@@ -36,6 +38,11 @@ const predictionsApi = {
 
   createPrediction: async (data: CreatePredictionData ): Promise<Prediction> => {
     const response = await api.post('/predictions/create', data);
+    return response.data;
+  },
+
+  placePrediction: async (data: CreatePredictionData ): Promise<PlacePredictResponse> => {
+    const response = await api.post(`/markets/${data.market_id}/predict?predicted_outcome=${data.predicted_outcome}&amount=${data.amount}`);
     return response.data;
   },
 

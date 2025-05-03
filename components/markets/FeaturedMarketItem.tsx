@@ -32,6 +32,7 @@ const FeaturedMarketItem: React.FC<FeaturedMarketItemProps> = ({ market }) => {
         <View style={styles.marketTimeLeft}>
           <Text style={[styles.timeLeftText, { color: '#8B5CF6' }]}>{getTimeRemaining()} left</Text>
         </View>
+        <Text style={styles.tierText}>{market.tier}</Text>
         <Text style={[styles.marketQuestion, { color: isDark ? '#FFFFFF' : '#1F2937' }]}>
           {market.title}
         </Text>
@@ -103,6 +104,15 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 14,
     fontWeight: '600',
+  },
+  tierText: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    fontSize: 12,
+    fontWeight: '500',
+    color: '#6B7280',
+    textTransform: 'uppercase',
   },
 });
 

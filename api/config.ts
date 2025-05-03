@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { API_URL } from '../constants/Config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const api = axios.create({
   baseURL: API_URL || 'http://localhost:8000/api',
@@ -10,8 +11,8 @@ const api = axios.create({
 });
 
 // Add request interceptor to include auth token
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('auth_token');
+api.interceptors.request.use(async (config) => {
+  const token = await AsyncStorage.getItem('auth_token');
   if (token && config.headers) {
     config.headers['Authorization'] = `Bearer ${token}`;
   }
@@ -48,6 +49,11 @@ api.interceptors.response.use(
       try {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
+        }).then((token) => {
+          if (token && originalRequest.headers) {
+            originalRequest.headers['Authorization'] = `Bearer ${token}`;
+          }
+          return axios(originalRequest);
         });
       } catch (err) {
         return Promise.reject(err);
@@ -58,16 +64,27 @@ api.interceptors.response.use(
     isRefreshing = true;
 
     try {
-      // Clear the current token since it's invalid
-      localStorage.removeItem('auth_token');
-      localStorage.removeItem('user_data');
-      delete axios.defaults.headers.common['Authorization'];
+      // Call the refresh token API
+      const refreshToken = await AsyncStorage.getItem('refresh_token'); // Assuming you store a refresh token
+      if (!refreshToken) {
+        throw new Error('No refresh token available');
+      }
 
-      // Redirect to login page
-      window.location.href = '/';
-      
-      processQueue(null, null);
-      return Promise.reject(error);
+      const response = await axios.post(`${API_URL}/auth/refresh`, { refresh_token: refreshToken });
+      const newToken = response.data.access_token;
+
+      // Store the new token
+      await AsyncStorage.setItem('auth_token', newToken);
+
+      // Update the default Authorization header
+      axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
+
+      // Retry the original request with the new token
+      processQueue(null, newToken);
+      if (originalRequest.headers) {
+        originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
+      }
+      return axios(originalRequest);
     } catch (refreshError) {
       processQueue(refreshError, null);
       return Promise.reject(refreshError);
@@ -77,4 +94,4 @@ api.interceptors.response.use(
   }
 );
 
-export default api; 
+export default api;

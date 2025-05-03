@@ -15,6 +15,7 @@ export interface RegisterCredentials extends LoginCredentials {
 
 export interface AuthResponse extends User {
   access_token: string;
+  refresh_token: string;
   token_type: string;
 }
 
@@ -50,6 +51,11 @@ const authApi = {
     );
     return response.data;
   },
+
+  refreshToken: async (refreshToken: string): Promise<AuthResponse> => {  
+    const response = await api.post('/auth/refresh', { refresh_token: refreshToken });
+    return response.data;
+  }
 };
 
 export default authApi; 

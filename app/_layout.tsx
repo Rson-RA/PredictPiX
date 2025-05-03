@@ -7,7 +7,7 @@ import { MarketCreationProvider } from '@/context/MarketCreationContext';
 import { API_URL } from '@/constants/Config';
 
 export default function RootLayout() {
-  console.log(API_URL);
+  console.log("API_URL", API_URL);
   return (
     <AuthProvider>
       <MarketCreationProvider>

@@ -6,6 +6,7 @@ export interface Market {
   end_time: string;
   resolution_time: string;
   status: 'pending' | 'active' | 'closed' | 'settled' | 'cancelled';
+  tier: 'basic' | 'trusted' | 'partner';
   total_pool: number;
   yes_pool: number;
   no_pool: number;
@@ -58,6 +59,12 @@ export interface MarketCreate {
   end_time: string;
 }
 
+export interface PlacePredictResponse {
+  prediction_id: number;
+  transaction_hash: string;
+  block_number: string;
+}
+
 export interface Prediction {
   id: number;
   market_id: number;
@@ -82,6 +89,8 @@ export interface Prediction {
     title: string;
     description: string;
     end_time: string;
+    status: string;
+    tier: string;
     resolution_time: string;
     creator_fee_percentage: number;
     platform_fee_percentage: number;

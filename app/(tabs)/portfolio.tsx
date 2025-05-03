@@ -1,36 +1,32 @@
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { useAuth } from '@/context/AuthContext';
+import predictionsApi from '@/api/predictions';
+import { Prediction } from '@/types/models';
 
 const timePeriods = ['1D', '1W', '1M', '1Y'];
 
-const activePredictions = [
-  {
-    id: '1',
-    category: 'Crypto',
-    title: 'BTC > π100k by Dec 2025',
-    prediction: 'Yes @ 0.67π',
-    invested: '$500 invested',
-    profit: '+π125.50',
-    isPositive: true,
-  },
-  {
-    id: '2',
-    category: 'Sports',
-    title: 'Lakers NBA Champions 2025',
-    prediction: 'No @ 0.55π',
-    invested: 'π300 invested',
-    profit: '-π45.30',
-    isPositive: false,
-  },
-];
-
 export default function PortfolioScreen() {
   const [selectedPeriod, setSelectedPeriod] = useState('1W');
+  const [predictions, setPredictions] = useState<Prediction[]>([]);
+
   const router = useRouter();
   const {user} = useAuth();
+
+  const fetchPredictions = async () => {
+    try {
+      const response = await predictionsApi.getPredictions({ status: 'pending' });
+      setPredictions(response);
+    } catch (error) {
+      console.error('Error fetching predictions:', error);
+    }
+  }
+
+  useEffect(() => {
+    fetchPredictions();
+  }, []);
 
   const handleDeposit = () => {
     router.push('/deposit-pi');
@@ -105,18 +101,18 @@ export default function PortfolioScreen() {
           </TouchableOpacity>
         </View>
 
-        {activePredictions.map((prediction) => (
+        {predictions.map((prediction) => (
           <TouchableOpacity key={prediction.id} style={styles.predictionCard}>
             <View style={styles.predictionHeader}>
-              <Text style={styles.predictionCategory}>{prediction.category}</Text>
+              <Text style={styles.predictionCategory}>{prediction.market.tier}</Text>
               <Text style={[
                 styles.predictionProfit,
-                { color: prediction.isPositive ? '#10B981' : '#EF4444' }
-              ]}>{prediction.profit}</Text>
+                { color: prediction.predicted_outcome == 'YES' ? '#10B981' : '#EF4444' }
+              ]}>{prediction.amount || 0} π</Text>
             </View>
-            <Text style={styles.predictionTitle}>{prediction.title}</Text>
+            <Text style={styles.predictionTitle}>{prediction.market.title}</Text>
             <View style={styles.predictionDetails}>
-              <Text style={styles.predictionInfo}>{prediction.prediction} • {prediction.invested}</Text>
+              <Text style={styles.predictionInfo}>{prediction.predicted_outcome} • {prediction.amount} π Invested</Text>
             </View>
           </TouchableOpacity>
         ))}
@@ -265,6 +261,7 @@ const styles = StyleSheet.create({
     color: '#8B5CF6',
     fontSize: 14,
     fontWeight: '500',
+    textTransform: 'capitalize'
   },
   predictionProfit: {
     fontSize: 14,

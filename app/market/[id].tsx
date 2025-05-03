@@ -71,10 +71,10 @@ export default function MarketDetailsScreen() {
     }
     // TODO: Implement API call to buy position
     setCreatingPrediction(true);
-    predictionsApi.createPrediction({
+    predictionsApi.placePrediction({
       market_id: market?.id || 0,
       amount: Number(amount),
-      predicted_outcome: isYesPosition ? 'yes' : 'no'
+      predicted_outcome: isYesPosition
     }).then((prediction) => {
       console.log('Prediction created:', prediction);
       setCreatingPrediction(false);
@@ -144,6 +144,7 @@ export default function MarketDetailsScreen() {
             <Text style={styles.title}>{market.title}</Text>
             <View style={styles.timeLeftContainer}>
               <Text style={styles.timeLeft}>{renderTimeRemaining(market.end_time)}</Text>
+              <Text style={styles.tierText}>{market.tier}</Text>
               <Text style={styles.status}>{market.status}</Text>
             </View>
           </View>
@@ -187,7 +188,7 @@ export default function MarketDetailsScreen() {
             </View>
             <View style={styles.infoItem}>
               <Text style={styles.infoLabel}>Source</Text>
-              <Text style={styles.infoValue}>{market.market_metadata?.source}</Text>
+              <Text style={styles.infoValue}>{market.market_metadata?.market?.source}</Text>
             </View>
           </View>
 
@@ -289,6 +290,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#9CA3AF',
     marginBottom: 8,
+    textTransform: 'capitalize'
+  },
+  tierText: {
+    fontSize: 16,
+    color: '#9CA3AF',
+    textTransform: 'capitalize'
   },
   statsContainer: {
     flexDirection: 'row',

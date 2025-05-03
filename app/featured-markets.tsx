@@ -86,10 +86,10 @@ export default function FeaturedMarketsScreen(): JSX.Element {
     }
     // TODO: Implement API call to buy position
     setCreatingPrediction(true);
-    predictionsApi.createPrediction({
+    predictionsApi.placePrediction({
       market_id: market?.id || 0,
       amount: Number(amount),
-      predicted_outcome: isYesPosition ? 'yes' : 'no'
+      predicted_outcome: isYesPosition
     }).then((prediction) => {
       console.log('Prediction created:', prediction);
       setCreatingPrediction(false);
