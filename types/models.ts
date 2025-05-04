@@ -150,6 +150,8 @@ export interface User {
     referral_code: string;
     referral_earnings: number;
     referred_by_id: number | null;
+    total_predictions: number
+    total_earnings: number
     created_at: string;
     updated_at: string;
 }
@@ -172,12 +174,52 @@ export interface Profile extends User {
   updated_at: string;
 }
 
+export interface Portfolio extends User {
+  earnings_in_24h: number;
+}
+
 interface TraderResponse {
   items: Trader[];
   total: number;
   page: number;
   limit: number;
   total_pages: number;
+}
+
+export interface ReferralFilters {
+  page?: number;
+  limit?: number;
+  status?: 'pending' | 'completed' | 'failed';
+}
+
+export interface ReferralResponse {
+  referral_code: string
+  referral_url: string
+  referral_earnings: number
+  total_referrals: number
+  referred_by: User
+}
+
+
+export interface Referral {
+  id: number;
+  user_id: number;
+  referred_user_id: number | null;
+  amount: number;
+  transaction_id: number | null;
+  created_at: string;
+  updated_at: string;
+  referred_user: {
+    firstname: string;
+    lastname: string;
+    username: string;
+    avatar_url: string | null;
+  };
+  transaction: {
+    id: number;
+    user_id: number;
+    amount: number;
+  }
 }
 
 

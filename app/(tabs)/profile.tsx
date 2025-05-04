@@ -8,7 +8,8 @@ import { useAuth } from '@/context/AuthContext';
 import usersApi from '@/api/users';
 import { getFullAvatarUrl } from '@/utils';
 import Toast from 'react-native-toast-message';
-import { Profile } from '@/types/models';
+import { Profile, Referral, ReferralResponse } from '@/types/models';
+import referralApi from '@/api/referral';
 
 const connectedAccounts = [
   {
@@ -41,6 +42,7 @@ export default function ProfileScreen() {
   const {user} = useAuth();
 
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [referral, setReferral] = useState<ReferralResponse | null>(null);
 
   const fetchProfile = async () => {
     if (user) {
@@ -49,8 +51,16 @@ export default function ProfileScreen() {
     }
   }
 
+  const fetchReferral = async () => {
+    if (user) {
+      const referral = await referralApi.getMyReferrals();
+      setReferral(referral);
+    }
+  }
+
   useEffect(() => {
     fetchProfile();
+    fetchReferral();
   }, [])    
   
 
@@ -86,12 +96,12 @@ export default function ProfileScreen() {
         {/* Stats */}
         <View style={styles.statsContainer}>
           <View style={styles.statItem}>
-            <Text style={styles.statValue}>{profile?.predictions || 0}</Text>
+            <Text style={styles.statValue}>{profile?.total_predictions || 0}</Text>
             <Text style={styles.statLabel}>Predictions</Text>
           </View>
           <View style={styles.statDivider} />
           <View style={styles.statItem}>
-            <Text style={styles.statValue}>π{profile?.total_profit || 0}</Text>
+            <Text style={styles.statValue}>π{profile?.total_earnings || 0}</Text>
             <Text style={styles.statLabel}>Earnings</Text>
           </View>
         </View>
@@ -142,11 +152,11 @@ export default function ProfileScreen() {
         <View style={styles.referralStats}>
           <View style={styles.referralStatItem}>
             <Text style={styles.referralLabel}>Total Referrals</Text>
-            <Text style={styles.referralValue}>{profile?.total_referrals || 0}</Text>
+            <Text style={styles.referralValue}>{referral?.total_referrals || 0}</Text>
           </View>
           <View style={styles.referralEarnings}>
             <Text style={styles.referralLabel}>Earned</Text>
-            <Text style={styles.referralValue}>π {profile?.total_earnings_from_referrals || 0}</Text>
+            <Text style={styles.referralValue}>π {referral?.referral_earnings || 0}</Text>
           </View>
         </View>
       </View>

@@ -4,28 +4,53 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { useAuth } from '@/context/AuthContext';
 import predictionsApi from '@/api/predictions';
-import { Prediction } from '@/types/models';
+import { Portfolio, Prediction } from '@/types/models';
+import usersApi from '@/api/users';
+import { logger } from '@/utils';
 
 const timePeriods = ['1D', '1W', '1M', '1Y'];
 
 export default function PortfolioScreen() {
   const [selectedPeriod, setSelectedPeriod] = useState('1W');
   const [predictions, setPredictions] = useState<Prediction[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [portfolio, setPortFolio] = useState<Portfolio>();
 
   const router = useRouter();
   const {user} = useAuth();
 
   const fetchPredictions = async () => {
     try {
-      const response = await predictionsApi.getPredictions({ status: 'pending' });
+      setLoading(true);
+      const response = await predictionsApi.getPredictions({ status: 'pending', user_id: user?.id });
       setPredictions(response);
+      setLoading(false);
     } catch (error) {
-      console.error('Error fetching predictions:', error);
+      logger('Error fetching predictions:', error);
+      setLoading(false);
+    }
+  }
+
+  const fetchPortfolio = async () => {
+    try {
+      if (user) {
+        setLoading(true);
+        const response = await usersApi.getPortfolio(user.id);
+        logger('portfolio response',response)
+        setPortFolio(response);
+        setLoading(false);
+      } else {
+        logger('fetchPortfolio:', 'User not found');
+      }
+    } catch (error) {
+      logger('fetchPortfolio', error)
+      setLoading(false);
     }
   }
 
   useEffect(() => {
     fetchPredictions();
+    fetchPortfolio();
   }, []);
 
   const handleDeposit = () => {
@@ -49,8 +74,8 @@ export default function PortfolioScreen() {
       {/* Balance Card */}
       <View style={styles.balanceCard}>
         <Text style={styles.balanceLabel}>Total Balance</Text>
-        <Text style={styles.balanceAmount}>π{user?.balance || 0}</Text>
-        <Text style={styles.balanceChange}>+π{user?.total_profit || 0} (24h)</Text>
+        <Text style={styles.balanceAmount}>π{portfolio?.balance || 0}</Text>
+        <Text style={styles.balanceChange}>+π{portfolio?.earnings_in_24h || 0} (24h)</Text>
 
         {/* Action Buttons */}
         <View style={styles.actionButtons}>

@@ -11,6 +11,7 @@ export interface RegisterCredentials extends LoginCredentials {
   first_name?: string;
   last_name?: string;
   phone_number?: string;
+  referral_code?: string;
 }
 
 export interface AuthResponse extends User {

@@ -58,6 +58,17 @@ const getTimeRemaining = (endTimeStr: string): { value: number; unit: 'days' | '
     return `${remaining.value}${remaining.unit === 'days' ? 'd' : 'h'} left`;
   };
 
-export { getFullAvatarUrl, getFullName, getTimeLeft, getTimeRemaining, renderTimeRemaining, formatDate };
+  const logger = (tag: string, message: any) => {
+    console.log(`[${new Date().toISOString()}] ${tag}`, message);
+  }
+
+  const getValidName = (firstname: string | null | undefined, lastname: string | null | undefined, username: string | null | undefined): string => {
+    if (!firstname && !lastname) {
+        return username || 'Unknown';
+    }
+    return `${firstname} ${lastname}`;
+  }
+
+export { getFullAvatarUrl, getFullName, getTimeLeft, getTimeRemaining, renderTimeRemaining, formatDate, logger, getValidName };
 
 

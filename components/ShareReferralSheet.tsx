@@ -11,20 +11,6 @@ interface ShareReferralSheetProps {
   referralLink: string;
 }
 
-interface Styles {
-  overlay: ViewStyle;
-  container: ViewStyle;
-  header: ViewStyle;
-  headerText: TextStyle;
-  closeButton: ViewStyle;
-  content: ViewStyle;
-  option: ViewStyle;
-  optionText: TextStyle;
-  divider: ViewStyle;
-  closeButtonBottom: ViewStyle;
-  closeButtonText: TextStyle;
-}
-
 export default function ShareReferralSheet({ isVisible, onClose, referralLink }: ShareReferralSheetProps) {
   if (!isVisible) return null;
 

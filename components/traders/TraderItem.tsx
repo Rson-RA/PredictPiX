@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { Colors } from '@/constants/Colors';
-import { getFullAvatarUrl } from '@/utils';
+import { getFullAvatarUrl, getValidName } from '@/utils';
 
 type Trader = {
   id: string;
@@ -27,7 +27,9 @@ const TraderItem = ({ trader }: TraderItemProps) => {
           style={styles.avatar}
         />
         <View style={styles.info}>
-          <Text style={styles.name}>{trader.firstname} {trader.lastname}</Text>
+          <Text style={styles.name}>
+            {getValidName(trader.firstname, trader.lastname, trader.username)}
+          </Text>
           {/* <Text style={styles.username}>@{trader.username}</Text> */}
         </View>
       </View>

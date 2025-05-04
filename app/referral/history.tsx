@@ -1,63 +1,34 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, ViewStyle, TextStyle, ImageStyle } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-
-interface ReferralUser {
-  id: string;
-  name: string;
-  joinedDate: string;
-  avatar: string;
-  reward: string;
-}
-
-interface Styles {
-  container: ViewStyle;
-  header: ViewStyle;
-  headerTitle: TextStyle;
-  backButton: ViewStyle;
-  content: ViewStyle;
-  userItem: ViewStyle;
-  userInfo: ViewStyle;
-  avatar: ImageStyle;
-  userName: TextStyle;
-  joinedDate: TextStyle;
-  reward: ViewStyle;
-  rewardText: TextStyle;
-  backButtonBottom: ViewStyle;
-  backButtonText: TextStyle;
-}
-
-const mockUsers: ReferralUser[] = [
-  {
-    id: '1',
-    name: 'Emma Davis',
-    joinedDate: 'Jan 15, 2025',
-    avatar: 'https://i.pravatar.cc/100?img=1',
-    reward: '+5 Pi'
-  },
-  {
-    id: '2',
-    name: 'James Wilson',
-    joinedDate: 'Jan 12, 2025',
-    avatar: 'https://i.pravatar.cc/100?img=2',
-    reward: '+5 Pi'
-  },
-  {
-    id: '3',
-    name: 'Sarah Chen',
-    joinedDate: 'Jan 10, 2025',
-    avatar: 'https://i.pravatar.cc/100?img=3',
-    reward: '+5 Pi'
-  }
-];
+import { useAuth } from '@/context/AuthContext';
+import { Referral } from '@/types/models';
+import referralApi from '@/api/referral';
+import { formatDate, getFullAvatarUrl, getValidName } from '@/utils';
 
 export default function ReferralHistoryScreen() {
   const router = useRouter();
+  const { user } = useAuth(); // Assuming you have a useAuth hook to get the current user
+  const [referralHistory, setReferralHistory] = React.useState<Referral[]>([]);
+
+  const getReferralHistory = async () => {
+    try {
+      const response = await referralApi.getReferralHistory({});
+      setReferralHistory(response);
+    } catch (error) {
+      console.error('Error fetching referral history:', error);
+    }
+  }
 
   const handleBack = () => {
     router.back();
   };
+
+
+  useEffect(() => {
+    getReferralHistory();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -72,20 +43,22 @@ export default function ReferralHistoryScreen() {
       </View>
 
       <ScrollView style={styles.content}>
-        {mockUsers.map((user) => (
-          <View key={user.id} style={styles.userItem}>
+        {referralHistory?.map((referral) => (
+          <View key={referral.id} style={styles.userItem}>
             <View style={styles.userInfo}>
               <Image
-                source={{ uri: user.avatar }}
+                source={{ uri: getFullAvatarUrl(referral?.referred_user?.avatar_url) }}
                 style={styles.avatar}
               />
               <View>
-                <Text style={styles.userName}>{user.name}</Text>
-                <Text style={styles.joinedDate}>Joined on {user.joinedDate}</Text>
+                <Text style={styles.userName}>
+                  {getValidName(referral.referred_user.firstname, referral.referred_user.lastname, referral.referred_user.username)}
+                </Text>
+                <Text style={styles.joinedDate}>Joined on {formatDate(referral.created_at)}</Text>
               </View>
             </View>
             <View style={styles.reward}>
-              <Text style={styles.rewardText}>{user.reward}</Text>
+              <Text style={styles.rewardText}>{referral.amount} π</Text>
             </View>
           </View>
         ))}

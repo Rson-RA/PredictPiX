@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Pressable, Alert } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Pressable, Alert, ScrollView } from 'react-native';
 import { Stack, Link, useRouter } from 'expo-router';
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/context/AuthContext';
@@ -30,96 +30,102 @@ export default function SignInScreen() {
   };
 
   const handleBack = () => {
-    router.back();
+    router.replace("/");
   };
 
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
       <View style={styles.container}>
-        <View style={styles.content}>
-          {/* Email Icon */}
-          <View style={styles.iconContainer}>
-            <MaterialCommunityIcons name="email-outline" size={32} color="#FFFFFF" />
-          </View>
-
-          {/* Title and Subtitle */}
-          <Text style={styles.title}>Sign In with Email</Text>
-          <Text style={styles.subtitle}>
-            Access your PredictPIX account or create a new one.
-          </Text>
-
-          {/* Form */}
-          <View style={styles.form}>
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Email Address</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="you@example.com"
-                placeholderTextColor="#6B7280"
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-              />
+        <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+          <View style={styles.content}>
+            {/* Email Icon */}
+            <View style={styles.iconContainer}>
+              <MaterialCommunityIcons name="email-outline" size={32} color="#FFFFFF" />
             </View>
 
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Password</Text>
-              <View style={styles.passwordContainer}>
+            {/* Title and Subtitle */}
+            <Text style={styles.title}>Sign In with Email</Text>
+            <Text style={styles.subtitle}>
+              Access your PredictPIX account or create a new one.
+            </Text>
+
+            {/* Form */}
+            <View style={styles.form}>
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Email Address</Text>
                 <TextInput
-                  style={[styles.input, styles.passwordInput]}
-                  placeholder="••••••••"
+                  style={styles.input}
+                  placeholder="you@example.com"
                   placeholderTextColor="#6B7280"
-                  value={password}
-                  onChangeText={setPassword}
-                  secureTextEntry={!showPassword}
+                  value={email}
+                  onChangeText={setEmail}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
                 />
-                <Pressable 
-                  style={styles.eyeIcon}
-                  onPress={() => setShowPassword(!showPassword)}
-                >
-                  <Ionicons 
-                    name={showPassword ? "eye-outline" : "eye-off-outline"} 
-                    size={20} 
-                    color="#6B7280" 
+              </View>
+
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Password</Text>
+                <View style={styles.passwordContainer}>
+                  <TextInput
+                    style={[styles.input, styles.passwordInput]}
+                    placeholder="••••••••"
+                    placeholderTextColor="#6B7280"
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry={!showPassword}
                   />
-                </Pressable>
+                  <Pressable 
+                    style={styles.eyeIcon}
+                    onPress={() => setShowPassword(!showPassword)}
+                  >
+                    <Ionicons 
+                      name={showPassword ? "eye-outline" : "eye-off-outline"} 
+                      size={20} 
+                      color="#6B7280" 
+                    />
+                  </Pressable>
+                </View>
+              </View>
+
+              {/* Sign In Button */}
+              <TouchableOpacity 
+                style={styles.signInButton}
+                onPress={handleSignIn}
+                disabled={isLoading}
+              >
+                <Text style={styles.signInButtonText}>
+                  {isLoading ? 'Signing In...' : 'Sign In'}
+                </Text>
+              </TouchableOpacity>
+
+              {/* Forgot Password */}
+              <TouchableOpacity>
+                <Text style={styles.forgotPassword}>Forgot Password?</Text>
+              </TouchableOpacity>
+
+              {/* Divider */}
+              <View style={styles.dividerContainer}>
+                <Text style={styles.dividerText}>or</Text>
+              </View>
+
+              {/* Sign Up Link */}
+              <View style={styles.signUpContainer}>
+                <Text style={styles.signUpText}>Don't have an account? </Text>
+                <Link href="/sign-up" style={styles.signUpLink}>Sign Up</Link>
               </View>
             </View>
 
+            {/* Back Button */}
             <TouchableOpacity 
-              style={styles.signInButton}
-              onPress={handleSignIn}
-              disabled={isLoading}
+              style={styles.backButton}
+              onPress={handleBack}
             >
-              <Text style={styles.signInButtonText}>
-              {isLoading ? 'Signing In...' : 'Sign In'}
-              </Text>
+              <Text style={styles.backButtonText}>Back</Text>
             </TouchableOpacity>
-
-            <TouchableOpacity>
-              <Text style={styles.forgotPassword}>Forgot Password?</Text>
-            </TouchableOpacity>
-
-            <View style={styles.dividerContainer}>
-              <Text style={styles.dividerText}>or</Text>
-            </View>
-
-            <View style={styles.signUpContainer}>
-              <Text style={styles.signUpText}>Don't have an account? </Text>
-              <Link href="/sign-up" style={styles.signUpLink}>Sign Up</Link>
-            </View>
           </View>
-
-          {/* Back Button */}
-          <TouchableOpacity 
-            style={styles.backButton}
-            onPress={handleBack}
-          >
-            <Text style={styles.backButtonText}>Back</Text>
-          </TouchableOpacity>
-        </View>
+        </ScrollView>
       </View>
     </>
   );
@@ -159,7 +165,7 @@ const styles = StyleSheet.create({
   },
   form: {
     width: '100%',
-    gap: 20,
+    gap: 6,
   },
   inputContainer: {
     width: '100%',
@@ -207,12 +213,12 @@ const styles = StyleSheet.create({
     color: '#9CA3AF',
     fontSize: 14,
     textAlign: 'center',
-    marginTop: 16,
+    marginTop: 8,
   },
   dividerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 24,
+    marginVertical: 3,
   },
   dividerText: {
     color: '#6B7280',
@@ -248,4 +254,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
-}); 
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 24,
+  },
+});

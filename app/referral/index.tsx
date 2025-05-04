@@ -5,48 +5,21 @@ import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import * as Clipboard from 'expo-clipboard';
 import ShareReferralSheet from '@/components/ShareReferralSheet';
 import ReferralTermsDialog from '@/components/ReferralTermsDialog';
-
-interface StylesType {
-  container: ViewStyle;
-  headerTitle: TextStyle;
-  backButton: ViewStyle;
-  content: ViewStyle;
-  header: ViewStyle;
-  headerIcon: ViewStyle;
-  title: TextStyle;
-  description: TextStyle;
-  imageContainer: ViewStyle;
-  referralImage: ViewStyle;
-  section: ViewStyle;
-  sectionTitle: TextStyle;
-  codeContainer: ViewStyle;
-  code: TextStyle;
-  copyButton: ViewStyle;
-  copyButtonText: TextStyle;
-  linkContainer: ViewStyle;
-  link: TextStyle;
-  shareButton: ViewStyle;
-  shareButtonText: TextStyle;
-  historyButton: ViewStyle;
-  historyButtonText: TextStyle;
-  termsButton: ViewStyle;
-  termsText: TextStyle;
-  scrollView: ViewStyle;
-}
+import { useAuth } from '@/context/AuthContext';
+import { APP_URL } from '@/constants/Config';
 
 export default function ReferralScreen(): React.JSX.Element {
   const [isShareSheetVisible, setIsShareSheetVisible] = useState(false);
   const [isTermsVisible, setIsTermsVisible] = useState(false);
+  const { user } = useAuth();
   const router = useRouter();
-  const referralCode = 'ABCD1234';
-  const referralLink = `https://predictpix.app/r/${referralCode}`;
 
   const handleBack = () => {
     router.back();
   };
 
   const copyCode = async () => {
-    await Clipboard.setStringAsync(referralCode);
+    await Clipboard.setStringAsync(user?.referral_code || "");
     // You can add a toast or notification here to show success
   };
 
@@ -118,7 +91,7 @@ export default function ReferralScreen(): React.JSX.Element {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Your Referral Code</Text>
             <View style={styles.codeContainer}>
-              <Text style={styles.code}>{referralCode}</Text>
+              <Text style={styles.code}>{user?.referral_code}</Text>
               <TouchableOpacity 
                 style={styles.copyButton}
                 onPress={copyCode}
@@ -135,7 +108,7 @@ export default function ReferralScreen(): React.JSX.Element {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Your Referral Link</Text>
             <View style={styles.linkContainer}>
-              <Text style={styles.link} numberOfLines={1}>{referralLink}</Text>
+              <Text style={styles.link} numberOfLines={1}>{APP_URL}/{user?.referral_code}</Text>
             </View>
             <TouchableOpacity 
               style={styles.shareButton}
@@ -175,7 +148,7 @@ export default function ReferralScreen(): React.JSX.Element {
       <ShareReferralSheet
         isVisible={isShareSheetVisible}
         onClose={closeShareSheet}
-        referralLink={referralLink}
+        referralLink={`${APP_URL}/${user?.referral_code}`}
       />
 
       <ReferralTermsDialog

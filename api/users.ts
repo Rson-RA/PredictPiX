@@ -1,5 +1,5 @@
 import api from './config';
-import { User, Trader, Profile } from '@/types/models';
+import { User, Trader, Profile, Portfolio } from '@/types/models';
 
 const usersApi = {
   getTopTraders: async (period: 'day' | 'week' | 'month' | 'all' = 'week', limit: number = 10): Promise<Trader[]> => {
@@ -43,7 +43,7 @@ const usersApi = {
     return response.data;
   },
 
-  getPortfolio: async (id: number): Promise<Trader> => {
+  getPortfolio: async (id: number): Promise<Portfolio> => {
     const response = await api.get(`/users/${id}/portfolio`);
     return response.data;
   },
