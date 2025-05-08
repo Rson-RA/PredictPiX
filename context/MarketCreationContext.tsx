@@ -1,21 +1,6 @@
 import React, { createContext, useContext, useState, type ReactNode } from 'react';
 import { MarketCreate } from '@/types/models';
 
-// export interface Outcome {
-//   yes: string;
-//   yesDescription: string;
-//   no: string;
-//   noDescription: string;
-//   source: string;
-// }
-
-// export interface MarketData {
-//   tier: string;
-//   title: string;
-//   description: string;
-//   outcomes: Outcome;
-// }
-
 interface MarketCreationContextType {
   marketData: MarketCreate;
   updateMarketData: (data: Partial<MarketCreate>) => void;

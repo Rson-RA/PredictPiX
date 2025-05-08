@@ -17,7 +17,6 @@ export default function SignInScreen() {
       Alert.alert('Error', 'Please fill in all fields');
       return;
     }
-    Alert.alert('Error', 'Please fill in all fields');
     setIsLoading(true);
     try {
       await login({ email, password });

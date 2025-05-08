@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, Alert, Linking } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -7,6 +7,9 @@ import ConnectPiDialog from '@/components/ConnectPiDialog';
 import ConnectWalletDialog from '@/components/ConnectWalletDialog';
 import WalletConnectStatus from '@/components/WalletConnectStatus';
 import WalletConnectionFailed from '@/components/WalletConnectionFailed';
+import { useAuth } from '@/context/AuthContext';
+import PiAuthWebView from '@/components/ui/PiAuthWebView';
+import { logger } from '@/utils';
 
 export default function LandingScreen() {
   const router = useRouter();
@@ -15,18 +18,35 @@ export default function LandingScreen() {
   const [showWalletConfirm, setShowWalletConfirm] = useState(false);
   const [showWalletConnectionFailed, setShowWalletConnectionFailed] = useState(false);
 
+  // auth with pi block
+  const [showPiAuth, setShowPiAuth] = useState(false);
+  const { loginWithPi } = useAuth();
+
+  const handlePiAuthSuccess = async (userInfo: { uid: string; accessToken: string; username: string; wallet_address: string }) => {
+    try {
+      logger('handlePiAuthSuccess', userInfo);
+      await loginWithPi(userInfo.accessToken);
+      router.replace('/(tabs)');
+    } catch (error) {
+      Alert.alert('Error', 'Failed to authenticate with Pi Wallet');
+    }
+  };
+
+
   const handlePiNetworkSignIn = () => {
     setShowPiDialog(true);
   };
 
   const handleConnectPi = () => {
     setShowPiDialog(false);
-    setShowWalletConfirm(true)
+    // setShowWalletConfirm(true)
+    setShowPiAuth(true);
   };
 
   const handleWalletConfirm = () => {
     setShowWalletDialog(false);
-    setShowWalletConfirm(true);
+    // setShowWalletConfirm(true);
+    setShowPiAuth(true);
   };
 
   const handleConfirm = (isContinue: boolean) => {
@@ -66,7 +86,7 @@ export default function LandingScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.content}>
-          <Text style={styles.title}>Welcome To Predict<Text style={styles.highlight}>PiX</Text></Text>
+          <Text style={styles.title}>Welcome To Predict</Text><Text style={styles.highlight}>PiX</Text>
           
           <LinearGradient
             colors={['#8B5CF6', '#EC4899']}
@@ -98,7 +118,7 @@ export default function LandingScreen() {
             <Image
               source={require('../assets/images/pi-icon.png')}
               style={styles.piIcon}
-              contentFit="contain"
+              resizeMode="contain"
             />
             <Text style={styles.buttonText}>Sign In With Pi Network</Text>
           </TouchableOpacity>
@@ -121,6 +141,7 @@ export default function LandingScreen() {
         </View>
       </ScrollView>
 
+       {/*connect pi wallet 1 */}
       {showPiDialog && (<ConnectPiDialog
         visible={showPiDialog}
         onClose={() => setShowPiDialog(false)}
@@ -128,22 +149,32 @@ export default function LandingScreen() {
         onHelp={handleHelp}
       />)}
 
+      {/*help dialog from on help*/}
       {showWalletDialog && (<ConnectWalletDialog
         visible={showWalletDialog}
         onClose={() => setShowWalletDialog(false)}
         onOpenWallet={handleWalletConfirm}
       />)}
 
+      {/*wallet connection status approval -> onsuccess 2*/}
       {showWalletConfirm && (<WalletConnectStatus
         visible={showWalletConfirm}
         onContinue={handleConfirm}
       />)}
 
+      {/*failed to connect wallet 3*/}
       {showWalletConnectionFailed && (<WalletConnectionFailed
         visible={showWalletConnectionFailed}
         onRetry={handleRetry}
         onCancel={handleCancel}
       />)}
+
+      {showPiAuth && <PiAuthWebView
+        visible={showPiAuth}
+        onClose={() => setShowPiAuth(false)}
+        onSuccess={handlePiAuthSuccess}
+      />}
+      
     </View>
   );
 }
@@ -152,6 +183,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#111827',
+    boxShadow: '0px 2px 3.84px rgba(0, 0, 0, 0.25)',
   },
   scrollView: {
     flex: 1,
@@ -257,4 +289,4 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
   },
-}); 
+});

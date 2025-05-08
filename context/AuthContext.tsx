@@ -8,6 +8,7 @@ interface AuthContextType {
   token: string | null;
   isLoading: boolean;
   login: (credentials: LoginCredentials) => Promise<void>;
+  loginWithPi: (code: string) => Promise<void>;
   register: (credentials: RegisterCredentials) => Promise<void>;
   logout: () => Promise<void>;
   updateProfile: (data: Partial<RegisterCredentials>) => Promise<void>;
@@ -77,6 +78,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const loginWithPi = async (code: string) => {
+    try {
+      const response = await authApi.loginWithPi(code);
+      await storeAuthData(response);
+    } catch (error) {
+      console.error('Pi login error:', error);
+      throw error;
+    }
+  };
+
   const register = async (credentials: RegisterCredentials) => {
     try {
       const response = await authApi.register(credentials);
@@ -117,6 +128,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isLoading,
         setUser,
         login,
+        loginWithPi,
         register,
         logout,
         updateProfile,
